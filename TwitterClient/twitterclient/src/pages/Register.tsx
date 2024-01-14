@@ -32,7 +32,9 @@ const Register = () => {
                 profilePicture,
                 gamesWon,
                 gamesLost
-            })
+            }),
+            credentials: 'include',
+            mode: 'cors'
         });
 
         setRedirect(true);
