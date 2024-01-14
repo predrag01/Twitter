@@ -104,4 +104,39 @@ body {
   font-size: 17px;
   font-weight: 500;
   cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.profile-main
+{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-content{
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-info{
+  display: flex;
+  flex-direction: row;
+  margin-top: 65px;
+}
+
+.profile-image{
+  width: 100px;
+  border-radius: 50px;
+  margin-left: 10px;
+  margin-right: 15px;
+}
+
+.profile-personal-info{
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
 }

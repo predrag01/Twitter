@@ -108,7 +108,7 @@ namespace BLL.Services
         {
             if (username == null)
             {
-                throw new Exception("Type usernama for searching!");
+                throw new Exception("Type username for searching!");
             }
 
             if (ownerUsername == null)
@@ -118,6 +118,17 @@ namespace BLL.Services
 
             var users = await this._unitOfWork.User.GetUsersByUsername(username, ownerUsername);
             return users;
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            if (userId == null)
+            {
+                throw new Exception("User id is not send!");
+            }
+            var user = await this._unitOfWork.User.GetUserById(userId);
+
+            return user;
         }
     }
 }
