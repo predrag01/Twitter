@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class UserService : ICommentService
+    public class UserService : IUserService
     {
         private readonly TwitterContext _db;
         public UnitOfWork _unitOfWork { get; set; }

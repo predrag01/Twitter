@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes} from 'react-router-dom'
+import './App.css'
+import Nav from './components/Nav'
+import Home from './pages/Home'
+import Register from './pages/Register'
+import Login from './pages/Login'
+import { useEffect, useState } from 'react'
 
 function App() {
+  const [username, setUserName] = useState('');
+  const [userId, setUserId] = useState(-1);
+  
+
+    useEffect(() => {
+        (
+            async () => {
+                const respone = await fetch('https://localhost:44348' + '/User/GetUser', {
+                    headers: {'Content-Type': 'application/json'},
+                    credentials: 'include',
+                    mode: 'cors'
+                });
+    
+                const content = await respone.json();
+    
+                setUserName(content.username)
+                setUserId(content.id)
+            }
+        )();
+    });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Nav username={username} setUsername={setUserName}/>
+
+        <main className='main'>
+          <Routes>
+            <Route path='/' element={<Home username={username} userId={userId}/>} />
+            <Route path='/Login' element={<Login setUsername={setUserName}/>}/>
+            <Route path='/Register' element={<Register />}/>
+          </Routes>
+        </main>
+      </BrowserRouter>
     </div>
   );
 }
 
-export default App;
+export default App

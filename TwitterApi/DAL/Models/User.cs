@@ -20,10 +20,13 @@ namespace DAL.Models
         public string LastName { get; set; }
         [Required]
         public string Email { get; set; }
+        [JsonIgnore]
         [Required]
         public string Password { get; set; }
         public string ProfilePicture { get; set; }
+        [Required]
         public int FollowingCount { get; set; }
+        [Required]
         public int FollowedCount { get; set; }
         [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
