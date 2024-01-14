@@ -19,7 +19,8 @@ const Register = () => {
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        await fetch('https://localhost:44348' + '/User/Register', {
+       // await fetch('https://localhost:44348' + '/User/Register', {
+          await fetch('https://localhost:7082' + '/User/Register', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

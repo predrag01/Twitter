@@ -14,7 +14,8 @@ function App() {
     useEffect(() => {
         (
             async () => {
-                const respone = await fetch('https://localhost:44348' + '/User/GetUser', {
+                //const respone = await fetch('https://localhost:44348' + '/User/GetUser', {
+                  const respone = await fetch('https://localhost:7082' + '/User/GetUser', {
                     headers: {'Content-Type': 'application/json'},
                     credentials: 'include',
                     mode: 'cors'

@@ -10,7 +10,8 @@ const Nav = (props: {username:string, setUsername: (username: string) => void}) 
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
   const logout = async () => {
-    await fetch('https://localhost:44348' + '/User/Logout', {
+    //await fetch('https://localhost:44348' + '/User/Logout', {
+      await fetch('https://localhost:7082' + '/User/Logout', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         credentials: 'include'

@@ -15,7 +15,8 @@ const SearchBar = (props: { username: string; setResults: (users: User[]) => voi
           return;
         }
   
-        const response = await fetch(`https://localhost:44348/User/Search/${encodeURIComponent(find)}/${encodeURIComponent(searching)}`, {
+        //const response = await fetch(`https://localhost:44348/User/Search/${encodeURIComponent(find)}/${encodeURIComponent(searching)}`, {
+          const response = await fetch(`https://localhost:7082/User/Search/${encodeURIComponent(find)}/${encodeURIComponent(searching)}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

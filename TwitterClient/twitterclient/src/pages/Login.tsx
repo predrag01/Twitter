@@ -11,7 +11,8 @@ const Login = (props: {setUsername: (username: string) => void}) => {
     const submit = async (e: SyntheticEvent) => {
         e.preventDefault();
 
-        const response = await fetch('https://localhost:44348' + '/User/Login', {
+        //const response = await fetch('https://localhost:44348' + '/User/Login', {
+            const response = await fetch('https://localhost:7082' + '/User/Login', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             credentials: 'include',
