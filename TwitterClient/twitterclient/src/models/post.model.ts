@@ -1,8 +1,11 @@
+import { User } from "./user.model";
+
 export interface Post{
     id?: number;
     content?: string;
-    dateTime?: Date;
+    posted: string;
     authorId?:  number;
+    author?:User;
     likeCounter?:number;
-   
+    datum: Date;
 }
