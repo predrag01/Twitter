@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DAL.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TwitterApi.Controllers
 {
@@ -6,9 +7,18 @@ namespace TwitterApi.Controllers
     [ApiController]
     public class FollowingListController : Controller
     {
-        public IActionResult Index()
+        [Route("ChangeState")]
+        [HttpPost]
+        public async Task<IActionResult> ChangeState([FromBody] FollowUnfollow obj)
         {
-            return View();
+            try
+            {
+                return Ok(obj);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

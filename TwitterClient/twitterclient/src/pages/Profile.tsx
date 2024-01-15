@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { User } from "../models/user.model";
 import { useEffect, useState } from "react";
 import image from "./../assets/noProfilePicture.png"
+import { FollowUnfollow } from "../models/followUnfollow.model";
 
 
 const Profile = ( props : {loggedUserId: number}) => {
@@ -41,6 +42,32 @@ const Profile = ( props : {loggedUserId: number}) => {
       fetchUserData();
     }, [profileUserId]);
 
+    const followUnfollow = async () => {
+
+      if (!profileUserId) {
+        console.error('ProfileUserId is undefined');
+        return;
+      }
+
+       var obj: FollowUnfollow = {
+        followingId : props.loggedUserId,
+        followedId : parseInt(profileUserId, 10),
+        following : !userData?.checkFollowing
+       }
+
+       await fetch('https://localhost:7082' + '/FollowingList/ChangeState', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          followingId : props.loggedUserId,
+          followedId : parseInt(profileUserId, 10),
+          following : !userData?.checkFollowing
+        }),
+        credentials: 'include',
+        mode: 'cors'
+      });
+    }
+
     return (
         <div className="profile-main">
           <div className="profile-content">
@@ -50,7 +77,9 @@ const Profile = ( props : {loggedUserId: number}) => {
                 <div className="profile-details">
                   <div className="profile-username-btn">
                     <label className="profile-title">{userData?.username}</label>
-                    <button className={`profile-follow-btn ${userData?.checkFollowing ? 'following-btn' : 'follow-btn'}`}>{userData?.checkFollowing ? 'Following' : 'Follow'}</button>
+                    <div onClick={followUnfollow}>
+                      <button className={`profile-follow-btn ${userData?.checkFollowing ? 'following-btn' : 'follow-btn'}`}>{userData?.checkFollowing ? 'Following' : 'Follow'} </button>
+                    </div>
                   </div>
                   <label className="profile-text">{userData?.name + ' ' + userData?.lastName}</label>
                 </div>
