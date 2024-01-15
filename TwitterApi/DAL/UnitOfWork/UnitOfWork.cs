@@ -20,6 +20,7 @@ namespace DAL.UnitOfWork
         public IPostRepository Post { get; private set; }
 
         public IUserRepository User { get; private set; }
+        public IFollowingListRepository FollowingList { get; private set; }
 
         public UnitOfWork(TwitterContext context)
         {
@@ -28,6 +29,7 @@ namespace DAL.UnitOfWork
             Like = new LikeRepository(_context);
             Post = new PostRepository(_context);
             User = new UserRepository(_context);
+            FollowingList = new FollowingListRepository(_context);
         }
         public async Task Save()
         {

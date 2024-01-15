@@ -32,5 +32,9 @@ namespace DAL.Models
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
         public virtual ICollection<Like> Likes { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<FollowingList> Following { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<FollowingList> Followed { get; set; }
     }
 }

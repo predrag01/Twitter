@@ -12,6 +12,7 @@ namespace DAL.DataContext
         public DbSet<Post>? Posts { get; set; }
         public DbSet<Like>? Likes { get; set; }
         public DbSet<Comment>? Comments { get; set; }
+        public DbSet<FollowingList> Followings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,11 +28,17 @@ namespace DAL.DataContext
                 .HasForeignKey(fl => fl.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //modelBuilder.Entity<Comment>()
-            //    .HasOne(fl => fl.Post)
-            //    .WithMany(u => u.Comments)
-            //    .HasForeignKey(fl => fl.PostId)
-            //    .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<FollowingList>()
+                .HasOne(fl => fl.User)
+                .WithMany(u => u.Following)
+                .HasForeignKey(fl => fl.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<FollowingList>()
+                .HasOne(fl => fl.Followed)
+                .WithMany(u => u.Followed)
+                .HasForeignKey(fl => fl.FollowedId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
