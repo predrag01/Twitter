@@ -109,5 +109,21 @@ namespace TwitterApi.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Route("Profile/{userId}")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            try
+            {
+                var user = await this._userService.GetUserById(userId);
+
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace DAL.UnitOfWork
         ILikeRepository Like { get; }
         IPostRepository Post { get; }
         IUserRepository User { get; }
+        IFollowingListRepository FollowingList { get; }
         Task Save();
     }
 }

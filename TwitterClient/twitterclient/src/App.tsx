@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import { useEffect, useState } from 'react'
+import Profile from './pages/Profile'
 
 function App() {
   const [username, setUserName] = useState('');
@@ -39,6 +40,7 @@ function App() {
             <Route path='/' element={<Home username={username} userId={userId}/>} />
             <Route path='/Login' element={<Login setUsername={setUserName}/>}/>
             <Route path='/Register' element={<Register />}/>
+            <Route path='/Profile/:userId' element={<Profile />}/>
           </Routes>
         </main>
       </BrowserRouter>
