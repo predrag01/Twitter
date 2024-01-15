@@ -4,6 +4,7 @@ using DAL.DataContext;
 using DAL.DTOs;
 using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 
 namespace TwitterApi.Controllers
 {
@@ -44,6 +45,21 @@ namespace TwitterApi.Controllers
             {
                 await this._postService.UpdatePost(post);
                 return Ok(post);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [Route("DeletePost")]
+        [HttpDelete]
+        public async Task<IActionResult> DeletePost(int postId)
+        {
+            try
+            {
+                await this._postService.DeletePost(postId);
+                return Ok("Deleted Post");
             }
             catch (Exception e)
             {
