@@ -8,5 +8,6 @@ namespace BLL.Services.IServices
 {
     public interface IFollowingListService
     {
+        Task<bool> CheckFollowing(int followingId, int follwedId);
     }
 }

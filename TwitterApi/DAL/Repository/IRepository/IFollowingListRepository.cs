@@ -9,6 +9,6 @@ namespace DAL.Repository.IRepository
 {
     public interface IFollowingListRepository : IRepository<FollowingList>
     {
-
+        Task<bool> CheckFollowing(int followingId, int follwedId);
     }
 }

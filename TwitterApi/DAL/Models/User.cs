@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -36,5 +37,7 @@ namespace DAL.Models
         public virtual ICollection<FollowingList> Following { get; set; }
         [JsonIgnore]
         public virtual ICollection<FollowingList> Followed { get; set; }
+        [NotMapped]
+        public bool CheckFollowing { get; set; }
     }
 }

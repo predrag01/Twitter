@@ -4,22 +4,23 @@ import { useEffect, useState } from "react";
 import image from "./../assets/noProfilePicture.png"
 
 
-const Profile = () => {
+const Profile = ( props : {loggedUserId: number}) => {
     // Access parameters from the URL
-    const { userId } = useParams();
+    const { profileUserId } = useParams();
     const [userData, setUserData] = useState<User>();
     const [error, setError] = useState('');
     
-    const [following, setFollowing] = useState(true);
+    const [following, setFollowing] = useState(false);
+
   
     useEffect(() => {
       const fetchUserData = async () => {
-        if (userId === undefined) {
+        if (profileUserId === undefined ) {
             setError('User ID is undefined');
             return;
         }
 
-        const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(userId)}`, {
+        const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(profileUserId)}/${encodeURIComponent(props.loggedUserId)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -31,12 +32,14 @@ const Profile = () => {
             throw new Error('Failed to fetch user data');
           }
           
-          const userData : User = await response.json();
-          setUserData(userData);
+          const user : User = await response.json();
+          if(user)
+          setUserData(user);
+        console.log(user?.checkFollowing)
           
       };
       fetchUserData();
-    }, [userId]);
+    }, [profileUserId]);
 
     return (
         <div className="profile-main">
@@ -47,7 +50,7 @@ const Profile = () => {
                 <div className="profile-details">
                   <div className="profile-username-btn">
                     <label className="profile-title">{userData?.username}</label>
-                    <button className={`profile-follow-btn ${following ? 'following-btn' : 'follow-btn'}`}>{following ? 'Following' : 'Follow'}</button>
+                    <button className={`profile-follow-btn ${userData?.checkFollowing ? 'following-btn' : 'follow-btn'}`}>{userData?.checkFollowing ? 'Following' : 'Follow'}</button>
                   </div>
                   <label className="profile-text">{userData?.name + ' ' + userData?.lastName}</label>
                 </div>

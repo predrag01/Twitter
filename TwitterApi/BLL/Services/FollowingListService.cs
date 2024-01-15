@@ -1,4 +1,5 @@
 ﻿using BLL.Helpers;
+using BLL.Services.IServices;
 using DAL.DataContext;
 using DAL.UnitOfWork;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-    public class FollowingListService
+    public class FollowingListService : IFollowingListService
     {
         private readonly TwitterContext _db;
         public UnitOfWork _unitOfWork { get; set; }
@@ -18,6 +19,12 @@ namespace BLL.Services
         {
             this._db = db;
             this._unitOfWork = new UnitOfWork(db);
+        }
+
+        public async Task<bool> CheckFollowing(int followingId, int follwedId)
+        {
+            var result = await _unitOfWork.FollowingList.CheckFollowing(followingId, follwedId);
+            return result;
         }
     }
 }

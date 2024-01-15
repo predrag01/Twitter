@@ -120,13 +120,24 @@ namespace BLL.Services
             return users;
         }
 
-        public async Task<User> GetUserById(int userId)
+        public async Task<User> GetUserById(int userId, int searchUserId)
         {
             if (userId == null)
             {
                 throw new Exception("User id is not send!");
             }
             var user = await this._unitOfWork.User.GetUserById(userId);
+
+            bool check = await this._unitOfWork.FollowingList.CheckFollowing(userId, searchUserId);
+
+            if(check)
+            {
+                user.CheckFollowing = true;
+            }
+            else
+            {
+                user.CheckFollowing = false;
+            }
 
             return user;
         }

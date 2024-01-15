@@ -17,5 +17,18 @@ namespace DAL.Repository
         {
             _db = db;
         }
+
+        public async Task<bool> CheckFollowing(int followingId, int followedId)
+        {
+            var res = await this._db.Followings.Where(x=> x.UserId == followingId && x.FollowedId == followedId).FirstOrDefaultAsync();
+            if (res == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

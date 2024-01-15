@@ -5,7 +5,7 @@ import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
 
 
-const Nav = (props: {username:string, setUsername: (username: string) => void}) => {
+const Nav = (props: {userId: number, username:string, setUsername: (username: string) => void}) => {
 
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
@@ -48,8 +48,8 @@ const Nav = (props: {username:string, setUsername: (username: string) => void}) 
       <div className="container-fluid">
         <Link className="navbar-brand" to={"/"} >Twitter</Link>
         <div className="collapse navbar-collapse" id="navbarCollapse">
-          <SearchBar username = {props.username} setResults={setSearchResults}/>
-          {searchResults.length > 0 && <SearchResultList results={searchResults} />}
+          <SearchBar username = {props.username} setResults={setSearchResults} />
+          {searchResults.length > 0 && <SearchResultList results={searchResults} userId={props.userId}/>}
         </div>
         <div className="d-flex">
             {menu}

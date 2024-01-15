@@ -7,4 +7,5 @@ export interface User {
     profilePicture?: string;
     followingCount?: number;
     followedCount?: number;
+    checkFollowing?: boolean;
   }

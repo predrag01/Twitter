@@ -6,6 +6,7 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import { useEffect, useState } from 'react'
 import Profile from './pages/Profile'
+import { User } from './models/user.model'
 
 function App() {
   const [username, setUserName] = useState('');
@@ -23,7 +24,6 @@ function App() {
                 });
     
                 const content = await respone.json();
-    
                 setUserName(content.username)
                 setUserId(content.id)
             }
@@ -33,14 +33,14 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Nav username={username} setUsername={setUserName}/>
+        <Nav username={username} setUsername={setUserName} userId={userId}/>
 
         <main className='main'>
           <Routes>
             <Route path='/' element={<Home username={username} userId={userId}/>} />
             <Route path='/Login' element={<Login setUsername={setUserName}/>}/>
             <Route path='/Register' element={<Register />}/>
-            <Route path='/Profile/:userId' element={<Profile />}/>
+            <Route path='/Profile/:profileUserId' element={<Profile loggedUserId={userId}/>}/>
           </Routes>
         </main>
       </BrowserRouter>

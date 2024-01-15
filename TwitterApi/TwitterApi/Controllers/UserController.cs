@@ -110,13 +110,13 @@ namespace TwitterApi.Controllers
             }
         }
 
-        [Route("Profile/{userId}")]
+        [Route("Profile/{profileUserId}/{searchUserId}")]
         [HttpGet]
-        public async Task<IActionResult> GetUserById(int userId)
+        public async Task<IActionResult> GetUserById(int profileUserId, int searchUserId)
         {
             try
             {
-                var user = await this._userService.GetUserById(userId);
+                var user = await this._userService.GetUserById(profileUserId, searchUserId);
 
                 return Ok(user);
             }
