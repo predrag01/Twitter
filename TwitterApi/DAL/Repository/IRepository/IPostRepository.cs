@@ -9,5 +9,10 @@ namespace DAL.Repository.IRepository
 {
     public interface IPostRepository : IRepository<Post>
     {
+        Task<Post> GetPostById(int ID);
+        Task<Post> CreatePost(Post post);
+        Task<Post> UpdatePost(Post post);
+        Task<Post> DeletePost(Post post);
+        Task<List<Post>> GetAllPosts();
     }
 }
