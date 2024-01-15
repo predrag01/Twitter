@@ -9,6 +9,8 @@ const Profile = () => {
     const { userId } = useParams();
     const [userData, setUserData] = useState<User>();
     const [error, setError] = useState('');
+    
+    const [following, setFollowing] = useState(true);
   
     useEffect(() => {
       const fetchUserData = async () => {
@@ -38,20 +40,33 @@ const Profile = () => {
 
     return (
         <div className="profile-main">
-            <div className="profile-content">
-                <div className="profile-info">
-                    <img className="profile-image" src={image} alt={userData?.username}/>
-                    <div className="profile-personal-info">
-                        <h2>{userData?.username}</h2>
-                        <label>{userData?.name + ' ' + userData?.lastName}</label>
-                        <label>{userData?.name}</label>
-                    </div>
+          <div className="profile-content">
+            <div className="profile-info">
+              <img className="profile-image" src={image} alt={userData?.username} />
+              <div className="profile-personality">
+                <div className="profile-details">
+                  <div className="profile-username-btn">
+                    <label className="profile-title">{userData?.username}</label>
+                    <button className={`profile-follow-btn ${following ? 'following-btn' : 'follow-btn'}`}>{following ? 'Following' : 'Follow'}</button>
+                  </div>
+                  <label className="profile-text">{userData?.name + ' ' + userData?.lastName}</label>
                 </div>
-                <div className="profile-posts">
-
+                <div className="profile-followers-counter">
+                  <div className="profile-counter">
+                    <label className="profile-count-label">Following</label>
+                    <label>{userData?.followingCount}</label>
+                  </div>
+                  <div className="profile-counter">
+                    <label className="profile-count-label">Followers</label>
+                    <label>{userData?.followedCount}</label>
+                  </div>
                 </div>
+              </div>
             </div>
-            
+            <div className="profile-posts">
+
+            </div>
+          </div>
         </div>
     );
 };
