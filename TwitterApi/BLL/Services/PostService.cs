@@ -44,6 +44,13 @@ namespace BLL.Services
             }
         
         }
+
+        public async Task DeletePost(int postId)
+        {
+            var postFound = await this._unitOfWork.Post.GetPostById(postId);
+            this._unitOfWork.Post.DeletePost(postFound);
+            await this._unitOfWork.Save();
+        }
         public async Task<List<Post>> AllPosts()
         {
                 List<Post> allpostsFound = await this._unitOfWork.Post.GetAllPosts();

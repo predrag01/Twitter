@@ -12,6 +12,7 @@ namespace BLL.Services.IServices
     {
         Task<Post> CreatePost(CreatePostDTO post);
         Task UpdatePost(PostUpdateDTO post);
+        Task DeletePost(int postId);
         Task<List<Post>> AllPosts();
     }
 }
