@@ -35,7 +35,7 @@ namespace DAL.Repository
         public async Task<FollowingList> Follow(FollowingList obj)
         {
             this._db.Followings.Add(obj);
-            obj.ID = await this._db.SaveChangesAsync(); 
+            obj.ID = this._db.SaveChanges(); 
             return obj;
         }
 

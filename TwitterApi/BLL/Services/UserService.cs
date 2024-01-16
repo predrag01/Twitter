@@ -128,15 +128,18 @@ namespace BLL.Services
             }
             var user = await this._unitOfWork.User.GetUserById(userId);
 
-            bool check = await this._unitOfWork.FollowingList.CheckFollowing(userId, searchUserId);
+            if(userId != searchUserId)
+            {
+                bool check = await this._unitOfWork.FollowingList.CheckFollowing(userId, searchUserId);
 
-            if(check)
-            {
-                user.CheckFollowing = true;
-            }
-            else
-            {
-                user.CheckFollowing = false;
+                if (check)
+                {
+                    user.CheckFollowing = true;
+                }
+                else
+                {
+                    user.CheckFollowing = false;
+                }
             }
 
             return user;

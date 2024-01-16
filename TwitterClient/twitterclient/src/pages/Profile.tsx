@@ -6,19 +6,24 @@ import { FollowUnfollow } from "../models/followUnfollow.model";
 
 
 const Profile = ( props : {loggedUserId: number}) => {
-    // Access parameters from the URL
     const { profileUserId } = useParams();
     const [userData, setUserData] = useState<User>();
     const [error, setError] = useState('');
     
-    const [following, setFollowing] = useState(false);
+    const [followBtn, setFollowBtn] = useState(true);
 
-  
     useEffect(() => {
       const fetchUserData = async () => {
         if (profileUserId === undefined ) {
             setError('User ID is undefined');
             return;
+        }
+
+        if(props.loggedUserId === parseInt(profileUserId, 10)){
+          setFollowBtn(false)
+        }
+        else{
+          setFollowBtn(true)
         }
 
         const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(profileUserId)}/${encodeURIComponent(props.loggedUserId)}`, {
@@ -35,8 +40,7 @@ const Profile = ( props : {loggedUserId: number}) => {
           
           const user : User = await response.json();
           if(user)
-          setUserData(user);
-        console.log(user?.checkFollowing)
+            setUserData(user);
           
       };
       fetchUserData();
@@ -83,9 +87,11 @@ const Profile = ( props : {loggedUserId: number}) => {
                 <div className="profile-details">
                   <div className="profile-username-btn">
                     <label className="profile-title">{userData?.username}</label>
-                    <div onClick={followUnfollow}>
-                      <button className={`profile-follow-btn ${userData?.checkFollowing ? 'following-btn' : 'follow-btn'}`}>{userData?.checkFollowing ? 'Following' : 'Follow'} </button>
-                    </div>
+                    {followBtn && (
+                        <div onClick={followUnfollow}>
+                          <button className={`profile-follow-btn ${userData?.checkFollowing ? 'following-btn' : 'follow-btn'}`}>{userData?.checkFollowing ? 'Following' : 'Follow'} </button>
+                        </div>
+                    )}                    
                   </div>
                   <label className="profile-text">{userData?.name + ' ' + userData?.lastName}</label>
                 </div>

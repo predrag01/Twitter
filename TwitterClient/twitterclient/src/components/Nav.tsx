@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 import { User } from "../models/user.model";
 import SearchBar from "./SearchBar";
 import SearchResultList from "./SearchResultList";
+import DropDownMenu from "./DropDownMenu";
+import image from "./../assets/noProfilePicture.png"
 
 
 const Nav = (props: {userId: number, username:string, setUsername: (username: string) => void}) => {
 
   const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [showMenu, setShowMenu] = useState(false)
+  
+  const showHideMenu = () => {
+    setShowMenu(!showMenu)
+  }
 
   const logout = async () => {
     //await fetch('https://localhost:44348' + '/User/Logout', {
@@ -35,11 +42,13 @@ const Nav = (props: {userId: number, username:string, setUsername: (username: st
     )
   } else {
     menu = (
-      <ul className="navbar-nav me-auto mb-2 mb-md-0">
-        <li className="nav-item active">
-          <Link className="nav-link" to={"Login"} onClick={logout}>Logout</Link>
-        </li>
-      </ul>
+      <div className="nav-menu">
+        <div className="nav-img-username" onClick={showHideMenu}>
+          <img className="nav-profile-image" src={image} alt={props.username} />
+          <label className="nav-username">{props.username}</label>
+        </div>
+        {showMenu && <DropDownMenu setUsername={props.setUsername} userId={props.userId}/>}
+      </div>
     )
   }
 

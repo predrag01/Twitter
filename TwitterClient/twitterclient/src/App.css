@@ -219,3 +219,52 @@ body {
 .following-btn:hover {
   background-color: #aaa;
 }
+
+.drop-down-menu {
+  position: absolute;
+  top: 100%;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  padding: 10px;
+  z-index: 1000;
+  margin-right: 35px;
+}
+
+.drop-down-menu a {
+  display: block;
+  padding: 8px 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+.drop-down-menu a:hover {
+  background-color: #f5f5f5;
+}
+
+.nav-menu{
+  display: flex;
+  flex-direction: column;
+  margin-right: 25px;
+}
+
+.nav-img-username{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+
+.nav-profile-image{
+  width: 30px;
+  height: auto;
+  border-radius: 15px;
+}
+
+.nav-username{
+  margin-left: 10px;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  cursor: pointer;
+}
