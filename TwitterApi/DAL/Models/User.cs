@@ -37,6 +37,8 @@ namespace DAL.Models
         public virtual ICollection<FollowingList> Following { get; set; }
         [JsonIgnore]
         public virtual ICollection<FollowingList> Followed { get; set; }
+        //[JsonIgnore]
+        //public virtual ICollection<Post> Posts { get; set; }
         [NotMapped]
         public bool CheckFollowing { get; set; }
     }

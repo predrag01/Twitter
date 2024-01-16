@@ -50,6 +50,10 @@ namespace DAL.Repository
                 .ToListAsync();
             return posts;
         }
-
+        public async Task<List<Post>> GetPostByAuthorId(int authorId)
+        {
+            List<Post> posts = await this._db.Posts.Where(x=>x.AuthorId==authorId).ToListAsync();
+            return posts;
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace DAL.Repository.IRepository
         Task<Post> UpdatePost(Post post);
         Task<Post> DeletePost(Post post);
         Task<List<Post>> GetAllPosts();
+        Task<List<Post>> GetPostByAuthorId(int authorId);
     }
 }

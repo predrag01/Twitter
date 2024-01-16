@@ -57,5 +57,11 @@ namespace BLL.Services
                 return allpostsFound;
             
         }
+
+        public async Task<List<Post>> GetPostByAuthorId(int authorId)
+        {
+            List<Post> allpostsFound = await this._unitOfWork.Post.GetPostByAuthorId(authorId);
+            return allpostsFound;
+        }
     }
 }

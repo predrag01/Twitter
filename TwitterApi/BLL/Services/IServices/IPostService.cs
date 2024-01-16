@@ -14,5 +14,6 @@ namespace BLL.Services.IServices
         Task UpdatePost(PostUpdateDTO post);
         Task DeletePost(int postId);
         Task<List<Post>> AllPosts();
+        Task<List<Post>> GetPostByAuthorId(int authorId);
     }
 }

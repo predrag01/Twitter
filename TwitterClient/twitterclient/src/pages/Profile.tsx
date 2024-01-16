@@ -3,12 +3,16 @@ import { User } from "../models/user.model";
 import { useEffect, useState } from "react";
 import image from "./../assets/noProfilePicture.png"
 import { FollowUnfollow } from "../models/followUnfollow.model";
+import { Post } from "../models/post.model";
+import OnePost from "../components/OnePost";
 
 
 const Profile = ( props : {loggedUserId: number}) => {
     const { profileUserId } = useParams();
     const [userData, setUserData] = useState<User>();
     const [error, setError] = useState('');
+    const [posts, setPosts] = useState<Post[]>([])
+    const [noPost, setNoPost] = useState(false)
     
     const [followBtn, setFollowBtn] = useState(true);
 
@@ -41,7 +45,28 @@ const Profile = ( props : {loggedUserId: number}) => {
           const user : User = await response.json();
           if(user)
             setUserData(user);
-          
+
+        const postsResponde = await fetch(`https://localhost:7082/Post/GetPostByAuthorId/${encodeURIComponent(profileUserId)}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'credentials': 'include',
+            },
+        });
+
+        if (!postsResponde.ok) {
+          throw new Error('Failed to fetch user data');
+        }
+        const postData = await postsResponde.json();
+
+        postData.forEach((post: Post) => {
+          const aa = post.posted.split("T");
+          post.datum = new Date(aa[0]);
+        });
+        setPosts(postData);
+        setNoPost(postData.length === 0);
+        
+
       };
       fetchUserData();
     }, [profileUserId]);
@@ -52,12 +77,6 @@ const Profile = ( props : {loggedUserId: number}) => {
         console.error('ProfileUserId is undefined');
         return;
       }
-
-       var obj: FollowUnfollow = {
-        followingId : props.loggedUserId,
-        followedId : parseInt(profileUserId, 10),
-        following : !userData?.checkFollowing
-       }
 
        await fetch('https://localhost:7082' + '/FollowingList/ChangeState', {
         method: 'POST',
@@ -108,7 +127,9 @@ const Profile = ( props : {loggedUserId: number}) => {
               </div>
             </div>
             <div className="profile-posts">
-
+              {noPost ?  <h3>No posts yet</h3> : (posts.map((post) => (
+                <OnePost key={post.id} post={post} />
+              )))}
             </div>
           </div>
         </div>

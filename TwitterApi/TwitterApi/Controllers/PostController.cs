@@ -89,6 +89,27 @@ namespace TwitterApi.Controllers
             }
         }
 
+        [Route("GetPostByAuthorId/{authorId}")]
+        [HttpGet]
+        public async Task<ActionResult<List<Post>>> GetPostByAuthorId(int authorId)
+        {
+            try
+            {
+                List<Post> posts = await this._postService.GetPostByAuthorId(authorId);
+
+                //if (posts == null || posts.Count == 0)
+                //{
+                //    return NotFound();
+                //}
+
+                return Ok(posts);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
     }
 
 }
