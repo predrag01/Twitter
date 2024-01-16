@@ -1,4 +1,5 @@
 ﻿using DAL.DataContext;
+using DAL.DTOs;
 using DAL.Models;
 using DAL.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,20 @@ namespace DAL.Repository
             {
                 return true;
             }
+        }
+
+        public async Task<FollowingList> Follow(FollowingList obj)
+        {
+            this._db.Followings.Add(obj);
+            obj.ID = await this._db.SaveChangesAsync(); 
+            return obj;
+        }
+
+        public async Task<FollowingList> Unfollow(FollowingList obj)
+        {
+            this._db.Followings.Remove(obj);
+            return obj;
+
         }
     }
 }

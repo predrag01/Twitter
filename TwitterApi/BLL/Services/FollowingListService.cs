@@ -1,6 +1,8 @@
 ﻿using BLL.Helpers;
 using BLL.Services.IServices;
 using DAL.DataContext;
+using DAL.DTOs;
+using DAL.Models;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,30 @@ namespace BLL.Services
         {
             var result = await _unitOfWork.FollowingList.CheckFollowing(followingId, follwedId);
             return result;
+        }
+
+        public async Task ChangeState(FollowUnfollow obj)
+        {
+            if(obj == null)
+            {
+                throw new Exception("Object is null!");
+            }
+
+            var following = new FollowingList
+            {
+                UserId = obj.FollowingId,
+                FollowedId = obj.FollowedId
+            };
+
+            if (obj.Following)
+            {                
+                this._unitOfWork.FollowingList.Follow(following);
+            }
+            else
+            {
+                this._unitOfWork.FollowingList.Unfollow(following);
+                await this._unitOfWork.Save();
+            }
         }
     }
 }

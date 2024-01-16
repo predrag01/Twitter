@@ -66,6 +66,12 @@ const Profile = ( props : {loggedUserId: number}) => {
         credentials: 'include',
         mode: 'cors'
       });
+      
+      setUserData((userData) => ({
+        ...userData,
+        checkFollowing: !userData?.checkFollowing,
+      }));
+      
     }
 
     return (
