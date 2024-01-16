@@ -38,10 +38,10 @@ namespace DAL.DTOs
         public string Name { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
         public string ProfilePicture { get; set; }
-        public int FollowingCount { get; set; }
-        public int FollowedCount { get; set; }
+        public bool ChangePass { get; set; }
+        public string OldPass{ get; set; }
+        public string NewPass { get; set; }
     }
     public class UserLoginDTO
     {

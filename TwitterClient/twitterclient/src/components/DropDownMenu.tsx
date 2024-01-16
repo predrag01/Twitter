@@ -16,6 +16,7 @@ const DropDownMenu = (props: {userId:number, setUsername: (username: string) => 
     return (
         <div className="drop-down-menu">
             <Link to={`Profile/${props.userId}?userId=${props.userId}`}>Profile</Link>
+            <Link to={`Settings/${props.userId}`}>Settings</Link>
             <Link to={"Login"} onClick={logout}>Logout</Link>
         </div>
     )

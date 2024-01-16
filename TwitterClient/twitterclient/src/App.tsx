@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import { useEffect, useState } from 'react'
 import Profile from './pages/Profile'
 import { User } from './models/user.model'
+import Settings from './pages/Settings'
 
 function App() {
   const [username, setUserName] = useState('');
@@ -41,6 +42,7 @@ function App() {
             <Route path='/Login' element={<Login setUsername={setUserName}/>}/>
             <Route path='/Register' element={<Register />}/>
             <Route path='/Profile/:profileUserId' element={<Profile loggedUserId={userId}/>}/>
+            <Route path='/Settings/:userId' element={<Settings userId={userId}/>}/>
           </Routes>
         </main>
       </BrowserRouter>

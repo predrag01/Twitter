@@ -86,10 +86,16 @@ namespace BLL.Services
                 userFound.LastName = user.LastName;
                 userFound.Username = user.Username;
                 userFound.Email = user.Email;
-                userFound.Password = user.Password;
                 userFound.ProfilePicture = user.ProfilePicture;
-                userFound.FollowedCount = user.FollowedCount;
-                userFound.FollowingCount = user.FollowingCount;
+
+                if(user.ChangePass)
+                {
+                    if(BCrypt.Net.BCrypt.Verify(user.OldPass, userFound.Password))
+                    {
+                        userFound.Password = BCrypt.Net.BCrypt.HashPassword(user.NewPass);
+                    }
+                }
+
                 this._unitOfWork.User.Update(userFound);
                 await this._unitOfWork.Save();
             }
