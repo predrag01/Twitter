@@ -22,6 +22,9 @@ const Login = (props: {setUsername: (username: string) => void, setUserId: (user
             mode:"cors"
         });
 
+        const jwtToken = response.headers.get('jwt');
+        console.log(jwtToken)
+
         if(response.status === 200){
             const respone = await fetch('https://localhost:7082' + '/User/GetUser', {
                     headers: {'Content-Type': 'application/json'},

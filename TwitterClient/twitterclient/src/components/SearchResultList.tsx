@@ -2,12 +2,12 @@ import { User } from "../models/user.model";
 import SearchResult from "./SearchResult";
 
 
-const SearchResultList = (props: { userId:number, results: User[]}) => {
+const SearchResultList = (props: { userId:number, results: User[], setResultList: (list: User[]) => void}) => {
   
   return (
     <div className="result-list">
        {props.results.map((result, id) => {
-        return <SearchResult result={result} key={id} userId={props.userId}/>
+        return <SearchResult result={result} key={id} userId={props.userId} setResultList={props.setResultList}/>
        })}
     </div>
   );

@@ -19,9 +19,8 @@ const Settings = ( props: {userId: number}) => {
           const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(props.userId)}/${encodeURIComponent(props.userId)}`, {
               method: 'GET',
               headers: {
-                'Content-Type': 'application/json',
-                'credentials': 'include',
-              },
+                'Content-Type': 'application/json'},
+              credentials: 'include'
             });
     
             if (!response.ok) {
