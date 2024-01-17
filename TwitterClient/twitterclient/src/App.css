@@ -342,3 +342,15 @@ body {
   margin-left: 15px;
   margin-right: 15px;
 }
+
+.login{
+  margin-top: 20px;
+}
+
+.login-email{
+  margin-bottom: 10px;
+}
+
+.registration-row{
+  margin-bottom: 10px;
+}

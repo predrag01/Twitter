@@ -48,27 +48,27 @@ const Register = () => {
     return (
         <form onSubmit={submit} className="form-signin">
             <h1 className="h3 mb-3 fw-normal">Registration</h1>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input className="form-control" placeholder="Name" required onChange={e => setName(e.target.value)}/>
               <label >Name</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input className="form-control" placeholder="Last Name" required onChange={e => setLastName(e.target.value)}/>
               <label >Last Name</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input className="form-control" placeholder="Username" required onChange={e => setUserName(e.target.value)}/>
               <label >Username</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input type="email" className="form-control" placeholder="name@example.com" required onChange={e => setEmail(e.target.value)}/>
               <label >Email</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input type="password" className="form-control" placeholder="Password" required onChange={e => setPassword(e.target.value)}/>
               <label >Password</label>
             </div>
-            <div className="form-floating">
+            <div className="form-floating registration-row">
               <input type="password" className="form-control" placeholder="Repeated password" required onChange={e => setRepeatedPassword(e.target.value)}/>
               <label >Repeated password</label>
             </div>

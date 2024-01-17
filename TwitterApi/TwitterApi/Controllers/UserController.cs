@@ -85,7 +85,7 @@ namespace TwitterApi.Controllers
                 return Unauthorized();
             }
         }
-        [Authorize]
+        
         [Route("Logout")]
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -110,7 +110,7 @@ namespace TwitterApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-        
+
         [Route("Profile/{profileUserId}/{searchUserId}")]
         [HttpGet]
         public async Task<IActionResult> GetUserById(int profileUserId, int searchUserId)

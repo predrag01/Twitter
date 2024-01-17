@@ -1,7 +1,8 @@
 // Home.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import AddPost from './AddPost';
 import ShowAllPosts from './ShowAllPosts';
+import { Navigate } from 'react-router-dom';
 
 const Home = (props: { username: string, userId: number }) => {
   return (
