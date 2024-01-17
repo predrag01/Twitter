@@ -15,14 +15,14 @@ namespace BLL.Services
     public class UserService : IUserService
     {
         private readonly TwitterContext _db;
-        public UnitOfWork _unitOfWork { get; set; }
+        public readonly IUnitOfWork _unitOfWork;
         private JwtService jwtService { get; set; }
 
-        public UserService(TwitterContext db)
+        public UserService(TwitterContext db, IUnitOfWork unitOfWork)
         {
             this._db = db;
-            this._unitOfWork = new UnitOfWork(db);
-            jwtService = new JwtService();
+            this._unitOfWork = unitOfWork;
+            this.jwtService = new JwtService();
         }
 
         public async Task<User> Register(UserRegisterDTO user)

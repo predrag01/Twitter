@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.DataContext;
+using DAL.Models;
 using DAL.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,8 +12,10 @@ namespace DAL.Repository
 {
     public class LikeRepository : Repository<Like>, ILikeRepository
     {
-        public LikeRepository(DbContext context) : base(context)
+        private TwitterContext _db;
+        public LikeRepository(TwitterContext db) : base(db)
         {
+            _db = db;
         }
     }
 }

@@ -2,6 +2,7 @@
 using BLL.Services.IServices;
 using DAL.DataContext;
 using DAL.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TwitterApi.Controllers
@@ -11,12 +12,12 @@ namespace TwitterApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly TwitterContext _db;
-        public IUserService _userService { get; set; }
+        public readonly IUserService _userService;
 
-        public UserController(TwitterContext db)
+        public UserController(TwitterContext db, IUserService userService)
         {
             this._db = db;
-            _userService = new UserService(db);
+            _userService = userService;
         }
 
         [Route("Register")]
@@ -84,7 +85,7 @@ namespace TwitterApi.Controllers
                 return Unauthorized();
             }
         }
-
+        [Authorize]
         [Route("Logout")]
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -109,7 +110,7 @@ namespace TwitterApi.Controllers
                 return BadRequest(e.Message);
             }
         }
-
+        
         [Route("Profile/{profileUserId}/{searchUserId}")]
         [HttpGet]
         public async Task<IActionResult> GetUserById(int profileUserId, int searchUserId)

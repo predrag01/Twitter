@@ -13,12 +13,12 @@ namespace TwitterApi.Controllers
     public class PostController : ControllerBase
     {
         private readonly TwitterContext _db;
-        public IPostService _postService { get; set; }
+        public readonly IPostService _postService;
 
-        public PostController(TwitterContext db)
+        public PostController(TwitterContext db, IPostService postService)
         {
             this._db = db;
-            _postService = new PostService(db);
+            _postService = postService;
         }
 
         [Route("Create")]

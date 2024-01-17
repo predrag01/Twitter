@@ -12,12 +12,12 @@ namespace TwitterApi.Controllers
     public class FollowingListController : Controller
     {
         private readonly TwitterContext _db;
-        public IFollowingListService _followingListService { get; set; }
+        public readonly IFollowingListService _followingListService;
 
-        public FollowingListController(TwitterContext db)
+        public FollowingListController(TwitterContext db, IFollowingListService followingListService)
         {
             this._db = db;
-            _followingListService = new FollowingListService(db);
+            _followingListService = followingListService;
         }
 
         [Route("ChangeState")]

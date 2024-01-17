@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.DataContext;
+using DAL.Models;
 using DAL.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,8 +12,10 @@ namespace DAL.Repository
 {
     public class CommentRepository : Repository<Comment>, ICommentRepository
     {
-        public CommentRepository(DbContext context) : base(context)
+        private TwitterContext _db;
+        public CommentRepository(TwitterContext db) : base(db)
         {
+            _db = db;
         }
     }
 }

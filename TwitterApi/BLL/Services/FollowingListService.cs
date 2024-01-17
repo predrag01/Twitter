@@ -15,12 +15,12 @@ namespace BLL.Services
     public class FollowingListService : IFollowingListService
     {
         private readonly TwitterContext _db;
-        public UnitOfWork _unitOfWork { get; set; }
+        public readonly IUnitOfWork _unitOfWork;
 
-        public FollowingListService(TwitterContext db)
+        public FollowingListService(TwitterContext db, IUnitOfWork unitOfWork)
         {
             this._db = db;
-            this._unitOfWork = new UnitOfWork(db);
+            this._unitOfWork = unitOfWork;
         }
 
         public async Task<bool> CheckFollowing(int followingId, int follwedId)

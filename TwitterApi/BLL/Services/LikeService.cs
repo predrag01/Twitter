@@ -12,12 +12,12 @@ namespace BLL.Services
     public class LikeService : ILikeService
     {
         private readonly TwitterContext _db;
-        public UnitOfWork _unitOfWork { get; set; }
+        public readonly IUnitOfWork _unitOfWork;
 
-        public LikeService(TwitterContext db)
+        public LikeService(TwitterContext db, IUnitOfWork unitOfWork)
         {
             this._db = db;
-            this._unitOfWork = new UnitOfWork(db);
+            this._unitOfWork = unitOfWork;
         }
     }
 }

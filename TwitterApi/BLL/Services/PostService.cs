@@ -15,13 +15,12 @@ namespace BLL.Services
     public class PostService : IPostService
     {
         private readonly TwitterContext _db;
-        public UnitOfWork _unitOfWork { get; set; }
+        public readonly IUnitOfWork _unitOfWork;
 
-        public PostService(TwitterContext db)
+        public PostService(TwitterContext db, IUnitOfWork unitOfWork)
         {
             this._db = db;
-            this._unitOfWork = new UnitOfWork(db);
-
+            this._unitOfWork = unitOfWork;
         }
         public async Task<Post> CreatePost(CreatePostDTO post)
         {
