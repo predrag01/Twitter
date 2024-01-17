@@ -52,9 +52,7 @@ namespace BLL.Services
                     Username = user.Username,
                     Email = user.Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(user.Password),
-                    ProfilePicture = user.ProfilePicture,
-                    FollowingCount = user.FollowingCount,
-                    FollowedCount = user.FollowedCount
+                    ProfilePicture = user.ProfilePicture
                 };
 
                 return await this._unitOfWork.User.Create(userCreated);
@@ -133,6 +131,9 @@ namespace BLL.Services
                 throw new Exception("User id is not send!");
             }
             var user = await this._unitOfWork.User.GetUserById(userId);
+
+            user.FollowersCount = await this._unitOfWork.FollowingList.CountFollowers(userId);
+            user.FollowingCount = await this._unitOfWork.FollowingList.CountFollowings(userId);
 
             if(userId != searchUserId)
             {

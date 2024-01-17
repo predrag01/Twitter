@@ -29,14 +29,14 @@ namespace DAL.DataContext
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FollowingList>()
-                .HasOne(fl => fl.User)
+                .HasOne(fl => fl.Follower)
                 .WithMany(u => u.Following)
-                .HasForeignKey(fl => fl.UserId)
+                .HasForeignKey(fl => fl.FollowerId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<FollowingList>()
                 .HasOne(fl => fl.Followed)
-                .WithMany(u => u.Followed)
+                .WithMany(u => u.Followers)
                 .HasForeignKey(fl => fl.FollowedId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

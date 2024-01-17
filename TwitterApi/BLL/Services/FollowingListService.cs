@@ -38,7 +38,7 @@ namespace BLL.Services
 
             var following = new FollowingList
             {
-                UserId = obj.FollowingId,
+                FollowerId = obj.FollowingId,
                 FollowedId = obj.FollowedId
             };
 

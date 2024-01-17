@@ -13,5 +13,7 @@ namespace DAL.Repository.IRepository
         Task<bool> CheckFollowing(int followingId, int follwedId);
         Task<FollowingList> Follow(FollowingList obj);
         Task<FollowingList> Unfollow(FollowingList obj);
+        Task<int> CountFollowings(int userId);
+        Task<int> CountFollowers(int userId);
     }
 }

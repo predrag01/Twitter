@@ -121,7 +121,7 @@ const Profile = ( props : {loggedUserId: number}) => {
                   </div>
                   <div className="profile-counter">
                     <label className="profile-count-label">Followers</label>
-                    <label>{userData?.followedCount}</label>
+                    <label>{userData?.followersCount}</label>
                   </div>
                 </div>
               </div>

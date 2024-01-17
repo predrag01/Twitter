@@ -25,10 +25,10 @@ namespace DAL.Models
         [Required]
         public string Password { get; set; }
         public string ProfilePicture { get; set; }
-        [Required]
+        [NotMapped]
         public int FollowingCount { get; set; }
-        [Required]
-        public int FollowedCount { get; set; }
+        [NotMapped]
+        public int FollowersCount { get; set; }
         [JsonIgnore]
         public virtual ICollection<Comment> Comments { get; set; }
         [JsonIgnore]
@@ -36,9 +36,7 @@ namespace DAL.Models
         [JsonIgnore]
         public virtual ICollection<FollowingList> Following { get; set; }
         [JsonIgnore]
-        public virtual ICollection<FollowingList> Followed { get; set; }
-        //[JsonIgnore]
-        //public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<FollowingList> Followers { get; set; }
         [NotMapped]
         public bool CheckFollowing { get; set; }
     }

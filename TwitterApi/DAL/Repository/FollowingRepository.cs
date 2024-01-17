@@ -21,7 +21,7 @@ namespace DAL.Repository
 
         public async Task<bool> CheckFollowing(int followingId, int followedId)
         {
-            var res = await this._db.Followings.Where(x=> x.UserId == followingId && x.FollowedId == followedId).FirstOrDefaultAsync();
+            var res = await this._db.Followings.Where(x=> x.FollowerId == followingId && x.FollowedId == followedId).FirstOrDefaultAsync();
             if (res == null)
             {
                 return false;
@@ -30,6 +30,16 @@ namespace DAL.Repository
             {
                 return true;
             }
+        }
+
+        public async Task<int> CountFollowers(int userId)
+        {
+            return await this._db.Followings.Where(x => x.FollowedId == userId).CountAsync();
+        }
+
+        public async Task<int> CountFollowings(int userId)
+        {
+            return await this._db.Followings.Where(x => x.FollowerId == userId).CountAsync();
         }
 
         public async Task<FollowingList> Follow(FollowingList obj)
