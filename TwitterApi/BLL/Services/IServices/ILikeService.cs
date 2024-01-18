@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DAL.DTOs;
+using DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,8 @@ namespace BLL.Services.IServices
 {
     public interface ILikeService
     {
+        Task<List<Like>> GetLikesByPostId(int postId);
+        Task<Like> Like(LikeDTO like);
+        Task<Like> Unlike(LikeDTO like);
     }
 }

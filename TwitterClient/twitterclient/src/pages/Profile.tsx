@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { User } from "../models/user.model";
 import { useEffect, useState } from "react";
 import image from "./../assets/noProfilePicture.png"
-import { FollowUnfollow } from "../models/followUnfollow.model";
 import { Post } from "../models/post.model";
 import OnePost from "../components/OnePost";
 
@@ -14,7 +13,7 @@ const Profile = ( props : {loggedUserId: number}) => {
     const [posts, setPosts] = useState<Post[]>([])
     const [noPost, setNoPost] = useState(false)
     
-    const [followBtn, setFollowBtn] = useState(true);
+    const [followBtn, setFollowBtn] = useState(false);
 
     useEffect(() => {
       const fetchUserData = async () => {
@@ -69,7 +68,7 @@ const Profile = ( props : {loggedUserId: number}) => {
 
       };
       fetchUserData();
-    }, [profileUserId]);
+    });
 
     const followUnfollow = async () => {
 
@@ -128,7 +127,7 @@ const Profile = ( props : {loggedUserId: number}) => {
             </div>
             <div className="profile-posts">
               {noPost ?  <h3>No posts yet</h3> : (posts.map((post) => (
-                <OnePost key={post.id} post={post} />
+                <OnePost key={post.id} post={post} userId={props.loggedUserId}/>
               )))}
             </div>
           </div>

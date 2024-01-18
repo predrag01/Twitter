@@ -2,8 +2,9 @@
 import React from "react";
 import { Post } from "../models/post.model";
 import "../App1.css"; // Dodaj CSS fajl
+import LikeComponent from "./Like";
 
-const OnePost = (props: { post: Post }) => {
+const OnePost = (props: { post: Post, userId: number}) => {
   if (!props.post) {
     return <p>Loading...</p>;
   }
@@ -76,7 +77,7 @@ const OnePost = (props: { post: Post }) => {
   <p className="datetime">
     {props.post.datum.toDateString()} {props.post.datum.toLocaleTimeString()}
   </p>
-  <p className="like-counter">Likes: {props.post.likeCounter}</p>
+  <LikeComponent postId={props.post.id} userId={props.userId}/>
   <div className="button-container">
     <button onClick={handleDelete}>Delete</button>
     <button onClick={handleUpdate}>Update</button>

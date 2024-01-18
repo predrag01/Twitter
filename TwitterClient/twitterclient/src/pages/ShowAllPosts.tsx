@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import OnePost from "../components/OnePost";
 import { Post } from "../models/post.model";
 
-const ShowAllPosts = (props: {}) => {
+const ShowAllPosts = (props: {userId: number}) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ const ShowAllPosts = (props: {}) => {
     <div className="showallposts">
       <h2>Latest Posts</h2>
       {posts.map((post) => (
-        <OnePost key={post.id} post={post} />
+        <OnePost key={post.id} post={post} userId={props.userId}/>
       ))}
     </div>
   );

@@ -10,7 +10,7 @@ const Home = (props: { username: string, userId: number }) => {
       <div className="home">
         <AddPost currentUserId={props.userId} /> {/* Dodajte trenutni userId kao prop */}
         {/*props.username ? 'Hi ' + props.username : 'You are not logged in'*/}
-        <ShowAllPosts />
+        <ShowAllPosts userId={props.userId}/>
       </div>
     </div>
   );

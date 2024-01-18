@@ -11,14 +11,13 @@ const DropDownMenu = (props: {userId:number, setUsername: (username: string) => 
         });
     
         props.setUsername('');
-        props.setUserId(-1)
-        console.log(props.userId)
-    }
+        props.setUserId(-1);
+    };
 
     const closeMenu =() =>
     {
         props.closeMenu(false)
-    }
+    };
 
     return (
         <div className="drop-down-menu" onClick={closeMenu}>
@@ -26,7 +25,7 @@ const DropDownMenu = (props: {userId:number, setUsername: (username: string) => 
             <Link to={ props.userId === -1 ? "/Login" : `Settings/${props.userId}`}>Settings</Link>
             <Link to={"Login"} onClick={logout}>Logout</Link>
         </div>
-    )
-}
+    );
+};
 
 export default DropDownMenu;

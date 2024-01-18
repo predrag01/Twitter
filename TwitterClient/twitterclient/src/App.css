@@ -354,3 +354,21 @@ body {
 .registration-row{
   margin-bottom: 10px;
 }
+
+.like-content{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.like-button{
+  background-color: transparent;
+  border: none;
+  font-size: 23px;
+}
+
+.likes{
+  font-size: 20px;
+  margin-right: 5px;
+  margin-top: 2px;
+}
