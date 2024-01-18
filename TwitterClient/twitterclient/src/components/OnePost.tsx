@@ -1,13 +1,24 @@
-// onePost.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Post } from "../models/post.model";
 import "../App1.css"; // Dodaj CSS fajl
 import LikeComponent from "./Like";
 
 const OnePost = (props: { post: Post, userId: number}) => {
-  if (!props.post) {
-    return <p>Loading...</p>;
-  }
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleDropdownClick = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleDropdownOptionClick = (option: string) => {
+    setDropdownOpen(false);
+    if (option === "Delete") {
+      handleDelete();
+    } else if (option === "Update") {
+      handleUpdate();
+    }
+  };
+
   const handleDelete = async () => {
     try {
       const response = await fetch(
@@ -66,24 +77,32 @@ const OnePost = (props: { post: Post, userId: number}) => {
   };
 
   return (
-<div className="post-container">
-  <div className="top-row">
-    <div className="icon">
-      <img src={props.post.author?.profilePicture} alt="Profile" />
+    <div className="post-container">
+      <div className="top-row">
+        <div className="icon">
+          <img src={props.post.author?.profilePicture} alt="Profile" />
+        </div>
+        <p className="username">{props.post.author?.username}</p>
+      </div>
+      <p className="content">{props.post.content}</p>
+      <p className="datetime">
+        {props.post.datum.toDateString()} {props.post.datum.toLocaleTimeString()}
+      </p>
+      <LikeComponent postId={props.post.id} userId={props.userId}/>
+      <div className="button-container">
+        <div className="dropdown">
+          <div className="dropdown-toggle" onClick={handleDropdownClick}>
+            Options
+          </div>
+          {isDropdownOpen && (
+            <div className="dropdown-menu">
+              <div onClick={() => handleDropdownOptionClick("Delete")}>Delete</div>
+              <div onClick={() => handleDropdownOptionClick("Update")}>Update</div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
-    <p className="username">{props.post.author?.username}</p>
-  </div>
-  <p className="content">{props.post.content}</p>
-  <p className="datetime">
-    {props.post.datum.toDateString()} {props.post.datum.toLocaleTimeString()}
-  </p>
-  <LikeComponent postId={props.post.id} userId={props.userId}/>
-  <div className="button-container">
-    <button onClick={handleDelete}>Delete</button>
-    <button onClick={handleUpdate}>Update</button>
-  </div>
-</div>
-
   );
 };
 
