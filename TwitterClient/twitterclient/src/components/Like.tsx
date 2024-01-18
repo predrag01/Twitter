@@ -21,29 +21,26 @@ const LikeComponent = ( props: {postId: number, userId: number}) => {
             const likeList : Like[] = await response.json();
             setLikes(likeList);
             setLikeNumber(likeList.length);
-            likes.forEach(like => {
-                if(like.userId === props.userId){
-                    setLiked(true);
-                    return;
-                }
-            });
+
+            const userLiked = likeList.some((like) => like.userId === props.userId);
+            setLiked(userLiked);
 
           }
         )();
-    });
+    }, [props.postId, props.userId]);
 
-    const likeUnlike = () => {
-        if(liked){
-            setLikeNumber(likeNumber-1);
-            setLiked(!liked);
-            setUserId(userId);
-            unLikePost();
-        } else{
-            setLikeNumber(likeNumber+1);
-            setLiked(!liked);
-            setUserId(userId);
-            likePost();
-        }
+    const like = () => {
+        setLikeNumber(likeNumber+1);
+        setLiked(true);
+        setUserId(userId);
+        likePost();
+    };
+
+    const unlike = () => {
+        setLikeNumber(likeNumber-1);
+        setLiked(false);
+        setUserId(userId);
+        unLikePost();
     };
 
     const likePost = async () => {
@@ -77,10 +74,10 @@ const LikeComponent = ( props: {postId: number, userId: number}) => {
             <label className="likes">{likeNumber}</label>
             <div>
                 {liked ? 
-                (<div className="like-button" onClick={likeUnlike}>
+                (<div className="like-button" onClick={unlike}>
                     <i className="bi bi-hand-thumbs-up-fill"></i>
                 </div>) : 
-                (<div className="like-button" onClick={likeUnlike}>
+                (<div className="like-button" onClick={like}>
                     <i className="bi bi-hand-thumbs-up"></i>
                 </div>)}
             </div>

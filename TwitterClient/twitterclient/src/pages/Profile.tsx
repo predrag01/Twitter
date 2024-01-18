@@ -68,7 +68,7 @@ const Profile = ( props : {loggedUserId: number}) => {
 
       };
       fetchUserData();
-    });
+    }, [profileUserId, props.loggedUserId]);
 
     const followUnfollow = async () => {
 
