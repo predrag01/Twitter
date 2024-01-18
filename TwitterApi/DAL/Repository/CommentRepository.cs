@@ -17,5 +17,34 @@ namespace DAL.Repository
         {
             _db = db;
         }
+        public async Task<Comment> GetCommentById(int id)
+        {
+            var com = await this._db.Comments.Where(x => x.ID == id).FirstOrDefaultAsync();
+            return com;
+        }
+
+        public async Task<Comment> CreateComment(Comment com)
+        {
+            this._db.Comments.Add(com);
+            com.ID = _db.SaveChanges();
+            return com;
+        }
+        public async Task<Comment> UpdateComment(Comment com)
+        {
+            this._db.Comments.Update(com);
+            return com;
+        }
+
+        public async Task<Comment> DeleteComment(Comment com)
+        {
+            this._db.Comments.Remove(com);
+            return com;
+        }
+        public async Task<List<Comment>> GetAllCommentsByPostId(int postId)
+        {
+            List<Comment> coms = await this._db.Comments.Where(x => x.PostId == postId).ToListAsync();
+            return coms;
+        }
     }
 }
+

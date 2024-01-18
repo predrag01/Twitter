@@ -1,5 +1,7 @@
 ﻿using BLL.Services.IServices;
 using DAL.DataContext;
+using DAL.DTOs;
+using DAL.Models;
 using DAL.UnitOfWork;
 using System;
 using System.Collections.Generic;
@@ -19,5 +21,41 @@ namespace BLL.Services
             this._db = db;
             this._unitOfWork = unitOfWork;
         }
+
+        public async Task<Comment> CreateComment(CreateCommentDTO com)
+        {
+            var commCreated = new Comment
+            {
+                CommentContent = com.CommentContent,
+                UserId = com.UserId,
+                PostId=com.PostId
+            };
+            return await this._unitOfWork.Comment.CreateComment(commCreated);
+        }
+        public async Task UpdateComment(CommentUpdateDTO com)
+        {
+            if (com != null)
+            {
+                var comFound = await this._unitOfWork.Comment.GetCommentById(com.Id);
+                comFound.CommentContent = com.CommentContent;
+                this._unitOfWork.Comment.Update(comFound);
+                await this._unitOfWork.Save();
+            }
+
+        }
+
+        public async Task DeleteComment(int comId)
+        {
+            var comFound = await this._unitOfWork.Comment.GetCommentById(comId);
+            this._unitOfWork.Comment.DeleteComment(comFound);
+            await this._unitOfWork.Save();
+        }
+
+        public async Task<List<Comment>> GetCommentByPostId(int postId)
+        {
+            List<Comment> allcomsFound = await this._unitOfWork.Comment.GetAllCommentsByPostId(postId);
+            return allcomsFound;
+        }
     }
 }
+
