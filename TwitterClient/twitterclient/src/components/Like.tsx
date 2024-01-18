@@ -24,7 +24,6 @@ const LikeComponent = ( props: {postId: number, userId: number}) => {
 
             const userLiked = likeList.some((like) => like.userId === props.userId);
             setLiked(userLiked);
-
           }
         )();
     }, [props.postId, props.userId]);

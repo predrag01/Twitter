@@ -6,13 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DAL.DataContext;
+using StackExchange.Redis;
 
 namespace DAL.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly TwitterContext _context;
-
+        private readonly IConnectionMultiplexer _redis;
         public ICommentRepository Comment { get; private set; }
 
         public ILikeRepository Like { get; private set; }
@@ -22,13 +23,14 @@ namespace DAL.UnitOfWork
         public IUserRepository User { get; private set; }
         public IFollowingListRepository FollowingList { get; private set; }
 
-        public UnitOfWork(TwitterContext context)
+        public UnitOfWork(TwitterContext context, IConnectionMultiplexer redis)
         {
             _context = context;
+            _redis = redis;
             Comment = new CommentRepository(_context);
             Like = new LikeRepository(_context);
             Post = new PostRepository(_context);
-            User = new UserRepository(_context);
+            User = new UserRepository(_context, _redis);
             FollowingList = new FollowingListRepository(_context);
         }
         public async Task Save()

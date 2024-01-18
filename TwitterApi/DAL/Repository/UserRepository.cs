@@ -2,6 +2,8 @@
 using DAL.Models;
 using DAL.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +15,11 @@ namespace DAL.Repository
     public class UserRepository : Repository<User>, IUserRepository
     {
         private TwitterContext _db;
-        public UserRepository(TwitterContext db) : base(db)
+        private readonly IConnectionMultiplexer _redis;
+        public UserRepository(TwitterContext db, IConnectionMultiplexer redis) : base(db)
         {
             _db = db;
+            _redis = redis;
         }
 
         public async Task<User> GetUserByEmail(string email)
@@ -26,8 +30,25 @@ namespace DAL.Repository
 
         public async Task<User> GetUserByUsername(string username)
         {
-            var user = await this._db.Users.Where(x => x.Username == username).FirstOrDefaultAsync();
-            return user;
+            var redis = _redis.GetDatabase();
+
+            var key = $"user:{username}:username";
+            var redisValue = await redis.StringGetAsync(key);
+
+            if(!redisValue.IsNull)
+            {
+                var userFromRedis = JsonConvert.DeserializeObject<User>(redisValue);
+                return userFromRedis;
+            }
+
+            var userFromDb = await this._db.Users.Where(x => x.Username == username).FirstOrDefaultAsync();
+            if(userFromDb != null)
+            {
+                var serializedUser = JsonConvert.SerializeObject(userFromDb);
+                await redis.StringSetAsync(key, serializedUser);
+            }
+
+            return userFromDb;
         }
 
         public async Task<IQueryable<User>> GetUsersByUsername(string username, string ownerUsername)
@@ -55,6 +76,13 @@ namespace DAL.Repository
         {
             _db.Users.Add(user);
             user.ID = _db.SaveChanges();
+
+            var redisDatabase = _redis.GetDatabase();
+            var key = $"user:{user.Username}:username";
+            var serializedUser = JsonConvert.SerializeObject(user);
+
+            await redisDatabase.StringSetAsync(key, serializedUser);
+
             return user;
         }
     }
