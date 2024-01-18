@@ -131,3 +131,31 @@
     gap: 8px;
   }
   
+
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-toggle {
+    cursor: pointer;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dropdown-menu div {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
