@@ -42,7 +42,9 @@ namespace DAL.Repository
         }
         public async Task<List<Comment>> GetAllCommentsByPostId(int postId)
         {
-            List<Comment> coms = await this._db.Comments.Where(x => x.PostId == postId).ToListAsync();
+            List<Comment> coms = await this._db.Comments.
+                Include(p => p.User)
+                .Where(x => x.PostId == postId).ToListAsync();
             return coms;
         }
     }

@@ -1,27 +1,9 @@
-.main{
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  margin: auto; /* Center the container itself */
-}
-.showallposts{
-  width: 100%;
-}
-.home {
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content horizontally */
-  margin: auto; /* Center the container itself */
-  width: 100%;
-}
-
 .showallposts {
   background-color: white;
 }
 
 .body {
-  width: 100%;
+  width: 40%;
   background-color: white;
   height: 100%;
   display: flex;
@@ -189,3 +171,72 @@
   .dropdown:hover .dropdown-menu {
     display: block;
   }
+
+
+
+
+/* Stil za komentare */
+.comments-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.comment-author {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.comment-content {
+  margin-bottom: 0;
+}
+
+/* Stil za dodavanje komentara */
+.add-comment-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.add-comment-container textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.add-comment-container button {
+  padding: 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* Stil za Loading poruku */
+.comments-container p {
+  margin-top: 10px;
+  font-style: italic;
+  color: #777;
+}
+
+.LikeCommentDiv{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.comments-toggle{
+  text-align: center;
+  padding-top: 15px; 
+}

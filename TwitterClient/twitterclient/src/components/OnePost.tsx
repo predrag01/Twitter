@@ -9,6 +9,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState<Comment[]>([]);
   const [loadingComments, setLoadingComments] = useState(false);
+  const [showAllComments, setShowAllComments] = useState(false);
 
   
   const handleDropdownClick = () => {
@@ -144,12 +145,66 @@ const OnePost = (props: { post: Post, userId: number}) => {
   }, []);
 
 
+
+  
+
+
+  const handleCommentUpdate = async (comment: Comment) => {
+    const updatedContent = prompt("Izmeni komentar:", comment.commentContent);
+  
+    if (updatedContent !== null) {
+      try {
+        const response = await fetch(`https://localhost:7082/Comment/UpdateComment`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: comment.id,
+            commentContent: updatedContent,
+          }),
+        });
+  
+        if (response.ok) {
+          console.log(`Comment with id ${comment.id} updated successfully.`);
+          fetchComments();
+        } else {
+          console.error(`Error updating comment with id ${comment.id}.`);
+        }
+      } catch (error) {
+        console.error("Error updating comment:", error);
+      }
+    }
+  };
+  
+  const handleCommentDelete = async (commentId:number) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7082/Comment/DeleteComment?comId=${encodeURIComponent(commentId)}`,
+        {
+          method: "DELETE",
+        }
+      );
+  
+      if (response.ok) {
+        console.log(`Comment with id ${commentId} deleted successfully.`);
+        // Assuming fetchComments is a function that fetches and updates the comments list
+        fetchComments();
+      } else {
+        console.error(`Error deleting comment with id ${commentId}.`);
+      }
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  };
+  
+  
   
   return (
     <div className="post-container">
       <div className="top-row">
         <div className="icon">
-          <img src={props.post.author?.profilePicture} alt="Profile" />
+          <img src={props.post.author?.profilePicture} alt="Profilna slika" />
         </div>
         <p className="username">{props.post.author?.username}</p>
       </div>
@@ -157,50 +212,68 @@ const OnePost = (props: { post: Post, userId: number}) => {
       <p className="datetime">
         {props.post.datum.toDateString()} {props.post.datum.toLocaleTimeString()}
       </p>
-      <LikeComponent postId={props.post.id} userId={props.userId} />
       <div className="button-container">
         {showDropdown ? (
           <div className="dropdown">
             <div className="dropdown-toggle" onClick={handleDropdownClick}>
-              Options
+              Opcije
             </div>
             {isDropdownOpen && (
               <div className="dropdown-menu">
-                <div onClick={() => handleDropdownOptionClick("Delete")}>Delete</div>
-                <div onClick={() => handleDropdownOptionClick("Update")}>Update</div>
+                <div onClick={() => handleDropdownOptionClick("Delete")}>Obriši</div>
+                <div onClick={() => handleDropdownOptionClick("Update")}>Izmeni</div>
               </div>
             )}
           </div>
         ) : null}
       </div>
-  
-      {/* Prikaz komentara */}
-      <div className="comments-container">
-        <h3>Komentari</h3>
-        {loadingComments ? (
-          <p>Učitavanje komentara...</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="comment">
-              <p className="comment-author">{comment.user?.username}</p>
-              <p className="comment-content">{comment.commentContent}</p>
-            </div>
-          ))
-        )}
+      <div className="LikeCommentDiv">
+        <LikeComponent postId={props.post.id} userId={props.userId} />
+        <p className="comments-toggle" onClick={() => setShowAllComments(!showAllComments)}>
+          Komentari
+        </p>
       </div>
+      {/* Comments Section */}
+      {showAllComments && (
+        <div className="comments-container">
+          <h3>Komentari</h3>
+          {loadingComments ? (
+            <p>Učitavanje komentara...</p>
+          ) : (
+            comments.map((comment) => (
+              <div key={comment.id} className="comment">
+                <p className="comment-author">{comment.user?.username}</p>
+                <p className="comment-content">{comment.commentContent}</p>
+                {comment.user?.id === props.userId && (
+                  <div>
+                    <button onClick={() => handleCommentUpdate(comment)}>
+                      Izmeni komentar
+                    </button>
+                    <button onClick={() => handleCommentDelete(comment.id)}>Obriši komentar</button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
   
-      {/* Dodavanje novog komentara */}
-      <div className="add-comment-container">
-        <textarea
-          rows={3}
-          placeholder="Dodaj komentar..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-        />
-        <button onClick={handleCommentSubmit}>Dodaj komentar</button>
-      </div>
+      {/* Add Comment Section */}
+      {showAllComments && (
+        <div className="add-comment-container">
+          <textarea
+            rows={3}
+            placeholder="Dodaj komentar..."
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+          />
+          <button onClick={handleCommentSubmit}>Dodaj komentar</button>
+        </div>
+      )}
     </div>
   );
+  
+  
 };
 
 export default OnePost;
