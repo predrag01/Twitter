@@ -28,10 +28,10 @@ namespace DAL.UnitOfWork
             _context = context;
             _redis = redis;
             Comment = new CommentRepository(_context);
-            Like = new LikeRepository(_context);
+            Like = new LikeRepository(_context, _redis);
             Post = new PostRepository(_context);
             User = new UserRepository(_context, _redis);
-            FollowingList = new FollowingListRepository(_context);
+            FollowingList = new FollowingListRepository(_context, _redis);
         }
         public async Task Save()
         {

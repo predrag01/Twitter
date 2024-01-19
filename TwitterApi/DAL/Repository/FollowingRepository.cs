@@ -22,13 +22,13 @@ namespace DAL.Repository
             _redis = redis;
         }
 
-        public async Task<bool> CheckFollowing(int followingId, int followedId)
+        public async Task<bool> CheckFollowing(int followerId, int followedId)
         {
             var redis = _redis.GetDatabase();
 
-            var key = $"following{followingId}";
+            var key = $"following{followerId}";
             var following = await redis.ListRangeAsync(key);
-            bool isIdInList = following.Any(element => element == followedId);
+            bool isIdInList = following.Any(element => (int)element == followedId);
             
             if(isIdInList)
             {
@@ -36,7 +36,7 @@ namespace DAL.Repository
             }
             else
             {
-                var res = await this._db.Followings.Where(x => x.FollowerId == followingId && x.FollowedId == followedId).FirstOrDefaultAsync();
+                var res = await this._db.Followings.Where(x => x.FollowerId == followerId && x.FollowedId == followedId).FirstOrDefaultAsync();
 
                 if (res == null)
                 {
@@ -44,6 +44,7 @@ namespace DAL.Repository
                 }
                 else
                 {
+                    await redis.ListRightPushAsync(key, followedId.ToString());
                     return true;
                 }
             }
@@ -89,7 +90,7 @@ namespace DAL.Repository
             await redis.ListRightPushAsync(key, obj.FollowedId.ToString());
 
             var key1 = $"followers:{obj.FollowedId}";
-            await redis.ListRightPushAsync(key, obj.FollowerId.ToString());
+            await redis.ListRightPushAsync(key1, obj.FollowerId.ToString());
 
             return obj;
         }
@@ -102,11 +103,16 @@ namespace DAL.Repository
             await redis.ListRemoveAsync(key, obj.FollowedId.ToString());
 
             var key1 = $"followers:{obj.FollowedId}";
-            await redis.ListRemoveAsync(key, obj.FollowerId.ToString());
+            await redis.ListRemoveAsync(key1, obj.FollowerId.ToString());
 
             this._db.Followings.Remove(obj);
             return obj;
 
+        }
+
+        public async Task<FollowingList> GetFollowingListbyId(int followedId, int followerId)
+        {
+            return await this._db.Followings.Where(x => x.FollowedId == followedId && x.FollowerId == followerId).FirstOrDefaultAsync();
         }
     }
 }

@@ -30,23 +30,7 @@ namespace DAL.Repository
 
         public async Task<User> GetUserByUsername(string username)
         {
-            var redis = _redis.GetDatabase();
-
-            var key = $"user:{username}:username";
-            var redisValue = await redis.StringGetAsync(key);
-
-            if(!redisValue.IsNull)
-            {
-                var userFromRedis = JsonConvert.DeserializeObject<User>(redisValue);
-                return userFromRedis;
-            }
-
             var userFromDb = await this._db.Users.Where(x => x.Username == username).FirstOrDefaultAsync();
-            if(userFromDb != null)
-            {
-                var serializedUser = JsonConvert.SerializeObject(userFromDb);
-                await redis.StringSetAsync(key, serializedUser);
-            }
 
             return userFromDb;
         }
@@ -63,25 +47,43 @@ namespace DAL.Repository
         public async Task<User> UpdateUser(User user)
         {
             this._db.Users.Update(user);
+
+            string key = $"user:{user.ID}:userId";
+            var redis = _redis.GetDatabase();
+            await redis.KeyDeleteAsync(key);
+
+            await redis.StringSetAsync(key, JsonConvert.SerializeObject(user));
+
             return user;
         }
 
         public async Task<User> GetUserById(int id)
         {
-            var user = await this._db.Users.Where(x => x.ID == id).FirstOrDefaultAsync();
-            return user;
+            var redis = _redis.GetDatabase();
+
+            var key = $"user:{id}:userId";
+            var redisValue = await redis.StringGetAsync(key);
+
+            if (!redisValue.IsNull)
+            {
+                var userFromRedis = JsonConvert.DeserializeObject<User>(redisValue);
+                return userFromRedis;
+            }
+
+            var userFromDb = await this._db.Users.Where(x => x.ID == id).FirstOrDefaultAsync();
+            if (userFromDb != null)
+            {
+                var serializedUser = JsonConvert.SerializeObject(userFromDb);
+                await redis.StringSetAsync(key, serializedUser);
+            }
+
+            return userFromDb;
         }
 
         public async Task<User> Create(User user)
         {
             _db.Users.Add(user);
-            user.ID = _db.SaveChanges();
-
-            var redisDatabase = _redis.GetDatabase();
-            var key = $"user:{user.Username}:username";
-            var serializedUser = JsonConvert.SerializeObject(user);
-
-            await redisDatabase.StringSetAsync(key, serializedUser);
+            user.ID = await _db.SaveChangesAsync();
 
             return user;
         }

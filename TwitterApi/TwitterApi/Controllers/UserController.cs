@@ -117,7 +117,7 @@ namespace TwitterApi.Controllers
         {
             try
             {
-                var user = await this._userService.GetUserById(profileUserId, searchUserId);
+                var user = await this._userService.GetUserById(searchUserId, profileUserId);
 
                 return Ok(user);
             }

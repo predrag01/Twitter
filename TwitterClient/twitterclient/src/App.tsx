@@ -49,7 +49,7 @@ function App() {
             <Route path='/Login' element={<Login setUsername={setUserName} setUserId={setUserId}/>}/>
             <Route path='/Register' element={<Register />}/>
             <Route path='/Profile/:profileUserId' element={<Profile loggedUserId={userId}/>}/>
-            <Route path='/Settings/:userId' element={<Settings userId={userId}/>}/>
+            <Route path='/Settings/:userId' element={<Settings userId={userId} setUsername={setUserName}/>}/>
           </Routes>
         </main>
       </BrowserRouter>

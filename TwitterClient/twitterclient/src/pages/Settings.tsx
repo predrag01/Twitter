@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { User } from "../models/user.model"
 import { UserUpdate } from "../models/userUpdate.model";
 
-const Settings = ( props: {userId: number}) => {
+const Settings = ( props: {setUsername: (username: string) => void, userId: number, }) => {
 
     const [user, setUser] = useState<User>();
     const [changePassword, setChangePassword] = useState(false);
@@ -65,8 +65,8 @@ const Settings = ( props: {userId: number}) => {
             body: JSON.stringify(updatedUser),
             credentials: 'include',
             mode: 'cors'
-          });
-          console.log(response)
+       });
+        props.setUsername(username);      
     }
 
     return(

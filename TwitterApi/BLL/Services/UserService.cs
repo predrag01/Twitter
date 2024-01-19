@@ -94,7 +94,7 @@ namespace BLL.Services
                     }
                 }
 
-                this._unitOfWork.User.Update(userFound);
+                this._unitOfWork.User.UpdateUser(userFound);
                 await this._unitOfWork.Save();
             }
         }
@@ -124,20 +124,20 @@ namespace BLL.Services
             return users;
         }
 
-        public async Task<User> GetUserById(int userId, int searchUserId)
+        public async Task<User> GetUserById(int userId, int profileUserId)
         {
             if (userId == null)
             {
                 throw new Exception("User id is not send!");
             }
-            var user = await this._unitOfWork.User.GetUserById(userId);
+            var user = await this._unitOfWork.User.GetUserById(profileUserId);
 
-            user.FollowersCount = await this._unitOfWork.FollowingList.CountFollowers(userId);
-            user.FollowingCount = await this._unitOfWork.FollowingList.CountFollowings(userId);
+            user.FollowersCount = await this._unitOfWork.FollowingList.CountFollowers(profileUserId);
+            user.FollowingCount = await this._unitOfWork.FollowingList.CountFollowings(profileUserId);
 
-            if(userId != searchUserId)
+            if(userId != profileUserId)
             {
-                bool check = await this._unitOfWork.FollowingList.CheckFollowing(userId, searchUserId);
+                bool check = await this._unitOfWork.FollowingList.CheckFollowing(userId, profileUserId);
 
                 if (check)
                 {

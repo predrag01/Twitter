@@ -10,8 +10,10 @@ const Profile = ( props : {loggedUserId: number}) => {
     const { profileUserId } = useParams();
     const [userData, setUserData] = useState<User>();
     const [error, setError] = useState('');
-    const [posts, setPosts] = useState<Post[]>([])
-    const [noPost, setNoPost] = useState(false)
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [noPost, setNoPost] = useState(false);
+    const [followingCount, setFollowingCount] = useState(0);
+    const [followersCount, setFollowersCount] = useState(0);
     
     const [followBtn, setFollowBtn] = useState(false);
 
@@ -29,6 +31,8 @@ const Profile = ( props : {loggedUserId: number}) => {
           setFollowBtn(true)
         }
 
+        console.log(props.loggedUserId)
+
         const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(profileUserId)}/${encodeURIComponent(props.loggedUserId)}`, {
             method: 'GET',
             headers: {
@@ -44,6 +48,13 @@ const Profile = ( props : {loggedUserId: number}) => {
           const user : User = await response.json();
           if(user)
             setUserData(user);
+
+          console.log(user.checkFollowing);
+          if(user.followersCount !== undefined && user.followingCount !==undefined)
+          {
+            setFollowersCount(user.followersCount);
+            setFollowingCount(user.followingCount);
+          }
 
         const postsResponde = await fetch(`https://localhost:7082/Post/GetPostByAuthorId/${encodeURIComponent(profileUserId)}`, {
             method: 'GET',
@@ -64,11 +75,9 @@ const Profile = ( props : {loggedUserId: number}) => {
         });
         setPosts(postData);
         setNoPost(postData.length === 0);
-        
-
       };
       fetchUserData();
-    }, [profileUserId, props.loggedUserId]);
+    }, [props.loggedUserId]);
 
     const followUnfollow = async () => {
 
@@ -93,6 +102,13 @@ const Profile = ( props : {loggedUserId: number}) => {
         ...userData,
         checkFollowing: !userData?.checkFollowing,
       }));
+
+      if(!userData?.checkFollowing){
+        setFollowersCount(followersCount+1)
+      }
+      else{
+        setFollowersCount(followersCount-1)
+      }
       
     }
 
@@ -116,11 +132,11 @@ const Profile = ( props : {loggedUserId: number}) => {
                 <div className="profile-followers-counter">
                   <div className="profile-counter">
                     <label className="profile-count-label">Following</label>
-                    <label>{userData?.followingCount}</label>
+                    <label>{followingCount}</label>
                   </div>
                   <div className="profile-counter">
                     <label className="profile-count-label">Followers</label>
-                    <label>{userData?.followersCount}</label>
+                    <label>{followersCount}</label>
                   </div>
                 </div>
               </div>

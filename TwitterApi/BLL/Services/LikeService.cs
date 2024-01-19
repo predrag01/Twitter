@@ -60,7 +60,7 @@ namespace BLL.Services
 
             if (liked == null)
             {
-                throw new Exception("Invalid like!");
+                return liked;
             }
 
             var res = await this._unitOfWork.Like.Unlike(liked);

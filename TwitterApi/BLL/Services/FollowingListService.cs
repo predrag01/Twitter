@@ -4,6 +4,7 @@ using DAL.DataContext;
 using DAL.DTOs;
 using DAL.Models;
 using DAL.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,15 +37,17 @@ namespace BLL.Services
                 throw new Exception("Object is null!");
             }
 
-            var following = new FollowingList
-            {
-                FollowerId = obj.FollowingId,
-                FollowedId = obj.FollowedId
-            };
+            var following = await _unitOfWork.FollowingList.GetFollowingListbyId(obj.FollowedId, obj.FollowingId);
 
             if (obj.Following)
-            {                
-                this._unitOfWork.FollowingList.Follow(following);
+            {
+                var param = new FollowingList
+                {
+                    FollowedId = obj.FollowedId,
+                    FollowerId = obj.FollowingId
+                };
+
+                this._unitOfWork.FollowingList.Follow(param);
             }
             else
             {
