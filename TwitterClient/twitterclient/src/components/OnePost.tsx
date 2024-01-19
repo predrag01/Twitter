@@ -3,6 +3,9 @@ import { Post } from "../models/post.model";
 import "../App1.css"; // Dodaj CSS fajl
 import LikeComponent from "./Like";
 import { Comment } from "../models/comment.model";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+
 
 const OnePost = (props: { post: Post, userId: number}) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -236,20 +239,24 @@ const OnePost = (props: { post: Post, userId: number}) => {
       {/* Comments Section */}
       {showAllComments && (
         <div className="comments-container">
-          <h3>Komentari</h3>
           {loadingComments ? (
             <p>Učitavanje komentara...</p>
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="comment">
+                <div className="icon">
+                  <img src={comment.user?.profilePicture} alt="Profilna slika" />
+                </div>
                 <p className="comment-author">{comment.user?.username}</p>
                 <p className="comment-content">{comment.commentContent}</p>
                 {comment.user?.id === props.userId && (
-                  <div>
+                  <div className="Izmena">
                     <button onClick={() => handleCommentUpdate(comment)}>
-                      Izmeni komentar
+                      <FontAwesomeIcon icon={faPencilAlt} /> 
                     </button>
-                    <button onClick={() => handleCommentDelete(comment.id)}>Obriši komentar</button>
+                    <button onClick={() => handleCommentDelete(comment.id)}>
+                      <FontAwesomeIcon icon={faTrash} /> 
+                    </button>
                   </div>
                 )}
               </div>
@@ -257,7 +264,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
           )}
         </div>
       )}
-  
+
       {/* Add Comment Section */}
       {showAllComments && (
         <div className="add-comment-container">
@@ -272,6 +279,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
       )}
     </div>
   );
+
   
   
 };

@@ -102,6 +102,7 @@
     flex-direction: column;
     position: relative;
     width: 100%;
+    align-items: center;
   }
   
   .add-post-container:hover {
@@ -175,61 +176,112 @@
 
 
 
-/* Stil za komentare */
-.comments-container {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.comment {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-}
-
-.comment-author {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.comment-content {
-  margin-bottom: 0;
-}
-
-/* Stil za dodavanje komentara */
-.add-comment-container {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-}
-
-.add-comment-container textarea {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.add-comment-container button {
-  padding: 10px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-/* Stil za Loading poruku */
-.comments-container p {
-  margin-top: 10px;
-  font-style: italic;
-  color: #777;
-}
+  .comments-container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .comment {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .comment-author {
+    font-weight: bold;
+    width: 100%;
+  }
+  
+  .comment-content {
+    margin-top: 5px;
+    width: 100%;
+  }
+  
+  .comment button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border: none;
+  }
+  
+  .comment button:hover {
+    background-color: #2980b9;
+  }
+  
+  .comment button.update {
+    background-color: transparent;
+    color: #3498db;
+  }
+  
+  .comment button.delete {
+    background-color: transparent;
+    color: #e74c3c;
+  }
+  
+  .add-comment-container {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .add-comment-container textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    resize: none;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .add-comment-container button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #2ecc71;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-comment-container button:hover {
+    background-color: #27ae60;
+  }
+  
+  
+  .comments-toggle {
+    text-align: center;
+    padding-top: 15px;
+  }
+  
+  .comment button.update::before {
+    content: "\f040"; /* Unicode karakter za olovku iz Font Awesome */
+    font-family: "Font Awesome 5 Free";
+  }
+  
+  .comment button.delete::before {
+    content: "\f1f8"; /* Unicode karakter za kantu iz Font Awesome */
+    font-family: "Font Awesome 5 Free";
+  }
+  
+  
+  .comment button::before {
+    font-size: 14px;
+    content: "";
+  }
+  
+  .comment button.delete {
+    color: #e74c3c;
+  }
+  
+  .comment button.update {
+    color: #3498db;
+  }
 
 .LikeCommentDiv{
   display: flex;
@@ -239,4 +291,9 @@
 .comments-toggle{
   text-align: center;
   padding-top: 15px; 
+}
+
+.Izmena{
+  display: flex;
+  flex-direction: row;
 }
