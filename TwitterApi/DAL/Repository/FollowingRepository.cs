@@ -26,7 +26,7 @@ namespace DAL.Repository
         {
             var redis = _redis.GetDatabase();
 
-            var key = $"following{followerId}";
+            var key = $"following:{followerId}";
             var following = await redis.ListRangeAsync(key);
             bool isIdInList = following.Any(element => (int)element == followedId);
             
@@ -55,7 +55,7 @@ namespace DAL.Repository
         {
             var redis = _redis.GetDatabase();
 
-            var key = $"followers{userId}";
+            var key = $"followers:{userId}";
             var sizeFromRedis = await redis.ListLengthAsync(key);
             if(sizeFromRedis > 0)
             {
@@ -69,7 +69,7 @@ namespace DAL.Repository
         {
             var redis = _redis.GetDatabase();
 
-            var key = $"following{userId}";
+            var key = $"following:{userId}";
             var sizeFromRedis = await redis.ListLengthAsync(key);
             if (sizeFromRedis > 0)
             {
