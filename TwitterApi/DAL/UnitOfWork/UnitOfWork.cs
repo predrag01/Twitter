@@ -27,9 +27,9 @@ namespace DAL.UnitOfWork
         {
             _context = context;
             _redis = redis;
-            Comment = new CommentRepository(_context);
+            Comment = new CommentRepository(_context, _redis);
             Like = new LikeRepository(_context, _redis);
-            Post = new PostRepository(_context);
+            Post = new PostRepository(_context, _redis);
             User = new UserRepository(_context, _redis);
             FollowingList = new FollowingListRepository(_context, _redis);
         }
