@@ -25,52 +25,41 @@ namespace DAL.Repository
 
         public async Task<Post> GetPostById(int id)
         {
+
             var redis = _redis.GetDatabase();
+            var key = $"post:{id}:postId";
+            var redisValue=await redis.StringGetAsync(key);
 
-            var key = $"post:{id}";
-            var cachedPost = await redis.StringGetAsync(key);
-
-            if (!cachedPost.IsNullOrEmpty)
+            if (!redisValue.IsNull)
             {
-                return JsonConvert.DeserializeObject<Post>(cachedPost);
+                var postFromRedis=JsonConvert.DeserializeObject<Post>(redisValue);
+                return postFromRedis;
             }
-            else
+            
+            var post = await this._db.Posts.Where(x => x.ID == id).FirstOrDefaultAsync();
+            if(post!=null)
             {
-                var post = await _db.Posts.Where(x => x.ID == id)
-                    .Include(p => p.Author)
-                    .Include(p => p.Comments)
-                    .FirstOrDefaultAsync();
-
-                if (post != null)
-                {
-                    await redis.StringSetAsync(key, JsonConvert.SerializeObject(post));
-                }
-
-                return post;
+                var serializedPost=JsonConvert.SerializeObject(post);
+                await redis.StringSetAsync(key, serializedPost);
             }
+            return post;
         }
 
         public async Task<Post> CreatePost(Post post)
         {
             this._db.Posts.Add(post);
             post.ID = _db.SaveChanges();
-
-            var redis = _redis.GetDatabase();
-
-            var key = $"post:{post.ID}";
-            await redis.StringSetAsync(key, JsonConvert.SerializeObject(post));
-
             return post;
         }
         public async Task<Post> UpdatePost(Post post)
         {
             this._db.Posts.Update(post);
 
+            var key = $"post:{post.ID}:postId";
             var redis = _redis.GetDatabase();
+            await redis.KeyDeleteAsync(key);
 
-            var key = $"post:{post.ID}";
             await redis.StringSetAsync(key, JsonConvert.SerializeObject(post));
-
             return post;
         }
 
@@ -80,7 +69,7 @@ namespace DAL.Repository
 
             var redis = _redis.GetDatabase();
 
-            var key = $"post:{post.ID}";
+            var key = $"post:{post.ID}:postId";
             await redis.KeyDeleteAsync(key);
 
             return post;

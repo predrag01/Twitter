@@ -38,7 +38,7 @@ namespace BLL.Services
             {
                 var postFound = await this._unitOfWork.Post.GetPostById(post.Id);
                 postFound.Content = post.Content;
-                this._unitOfWork.Post.Update(postFound);
+                this._unitOfWork.Post.UpdatePost(postFound);
                 await this._unitOfWork.Save();
             }
         

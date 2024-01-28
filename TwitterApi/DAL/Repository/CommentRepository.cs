@@ -24,85 +24,72 @@ namespace DAL.Repository
         public async Task<Comment> GetCommentById(int id)
         {
             var redis = _redis.GetDatabase();
-            var key = $"comment:{id}";
-            var cachedComment = await redis.StringGetAsync(key);
 
-            if (!cachedComment.IsNullOrEmpty)
+            var key = $"comment:{id}:commentId";
+            var redisValue = await redis.StringGetAsync(key);
+
+            if (!redisValue.IsNull)
             {
-                return JsonConvert.DeserializeObject<Comment>(cachedComment);
+                var commentFromRedis = JsonConvert.DeserializeObject<Comment>(redisValue);
+                return commentFromRedis;
             }
-            else
+
+            var com = await this._db.Comments.Where(x => x.ID == id).FirstOrDefaultAsync();
+            if (com != null)
             {
-                var com = await _db.Comments.Where(x => x.ID == id).FirstOrDefaultAsync();
-
-                if (com != null)
-                {
-                    await redis.StringSetAsync(key, JsonConvert.SerializeObject(com));
-                }
-
-                return com;
+                var serializedComment = JsonConvert.SerializeObject(com);
+                await redis.StringSetAsync(key, serializedComment);
             }
+            return com;
         }
 
         public async Task<Comment> CreateComment(Comment com)
         {
             this._db.Comments.Add(com);
-            com.ID = _db.SaveChanges();
+            await this._db.SaveChangesAsync();
+
+            //var newCom = await _db.Comments.FindAsync(com.ID);
 
             var redis = _redis.GetDatabase();
-
-            var key = $"comment:{com.ID}";
-            await redis.StringSetAsync(key, JsonConvert.SerializeObject(com));
+            var key = $"post:{com.PostId}:comments";
+            await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
 
             return com;
         }
         public async Task<Comment> UpdateComment(Comment com)
         {
-            this._db.Comments.Update(com);
 
+            var key = $"post:{com.PostId}:comments";
             var redis = _redis.GetDatabase();
 
-            var key = $"comment:{com.ID}";
-            await redis.StringSetAsync(key, JsonConvert.SerializeObject(com));
+            var comfordel = await GetCommentById(com.ID);
+            await redis.ListRemoveAsync(key, JsonConvert.SerializeObject(comfordel));
+
+            this._db.Comments.Update(com);
+            await this._db.SaveChangesAsync();
+
+            await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
 
             return com;
         }
 
         public async Task<Comment> DeleteComment(Comment com)
         {
-            this._db.Comments.Remove(com);
-
+            var key = $"post:{com.PostId}:comments";
             var redis = _redis.GetDatabase();
 
-            var key = $"comment:{com.ID}";
-            await redis.KeyDeleteAsync(key);
+            await redis.ListRemoveAsync(key, JsonConvert.SerializeObject(com));
 
+            this._db.Comments.Remove(com);
+            await this._db.SaveChangesAsync();
             return com;
         }
         public async Task<List<Comment>> GetAllCommentsByPostId(int postId)
         {
-            var redis = _redis.GetDatabase();
-
-            var key = $"commentsByPost:{postId}";
-            var cachedComments = await redis.StringGetAsync(key);
-
-            if (!cachedComments.IsNullOrEmpty)
-            {
-                return JsonConvert.DeserializeObject<List<Comment>>(cachedComments);
-            }
-            else
-            {
-                var comments = await this._db.Comments.Include(p => p.User).Where(x => x.PostId == postId).ToListAsync();
-
-                if (comments != null && comments.Count > 0)
-                {
-                    await redis.StringSetAsync(key, JsonConvert.SerializeObject(comments));
-                }
-
-                return comments;
-            }
+            List<Comment> coms = await this._db.Comments.
+                Include(p => p.User)
+                .Where(x => x.PostId == postId).ToListAsync();
+            return coms;
         }
     }
-    
-}
-
+    }

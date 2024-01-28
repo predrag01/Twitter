@@ -185,7 +185,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
       const response = await fetch(
         `https://localhost:7082/Comment/DeleteComment?comId=${encodeURIComponent(commentId)}`,
         {
-          method: "DELETE",
+          method: "DELETE"
         }
       );
   
