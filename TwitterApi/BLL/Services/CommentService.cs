@@ -38,7 +38,7 @@ namespace BLL.Services
             {
                 var comFound = await this._unitOfWork.Comment.GetCommentById(com.Id);
                 comFound.CommentContent = com.CommentContent;
-                this._unitOfWork.Comment.Update(comFound);
+                this._unitOfWork.Comment.UpdateComment(comFound);
                 await this._unitOfWork.Save();
             }
 
