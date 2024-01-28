@@ -95,9 +95,6 @@ namespace DAL.Repository
                 var comsFromRedis = redisValues
                     .Select(redisValue => JsonConvert.DeserializeObject<Comment>(redisValue))
                     .ToList();
-
-                
-
                 return comsFromRedis;
             }
             // Ako nema komentara u Redis-u, dohvati ih iz baze
