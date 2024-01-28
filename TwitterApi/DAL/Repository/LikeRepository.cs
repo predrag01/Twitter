@@ -56,10 +56,12 @@ namespace DAL.Repository
             this._db.Likes.Add(like);
             like.ID = this._db.SaveChanges();
 
+            var newLike = await this._db.Likes.Where(x => x.PostId == like.PostId && x.UserId == like.UserId).FirstOrDefaultAsync();
+
             var redis = _redis.GetDatabase();
 
             var key = $"postLikes:{like.PostId}";
-            await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(like));
+            await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(newLike));
 
             return like;
         }
