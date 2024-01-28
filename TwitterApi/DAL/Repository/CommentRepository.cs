@@ -48,8 +48,6 @@ namespace DAL.Repository
             this._db.Comments.Add(com);
             await this._db.SaveChangesAsync();
 
-            //var newCom = await _db.Comments.FindAsync(com.ID);
-
             var redis = _redis.GetDatabase();
             var key = $"post:{com.PostId}:comments";
             await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
@@ -86,10 +84,35 @@ namespace DAL.Repository
         }
         public async Task<List<Comment>> GetAllCommentsByPostId(int postId)
         {
-            List<Comment> coms = await this._db.Comments.
-                Include(p => p.User)
-                .Where(x => x.PostId == postId).ToListAsync();
-            return coms;
+            var redis = _redis.GetDatabase();
+            var key = $"post:{postId}:comments";
+
+            // Pokušajte dobiti komentare iz Redis-a
+            var redisValues = await redis.ListRangeAsync(key);
+            if (redisValues.Any())
+            {
+                // Ako postoje komentari u Redis-u, vrati ih
+                var comsFromRedis = redisValues
+                    .Select(redisValue => JsonConvert.DeserializeObject<Comment>(redisValue))
+                    .ToList();
+
+                
+
+                return comsFromRedis;
+            }
+            // Ako nema komentara u Redis-u, dohvati ih iz baze
+            List<Comment> comsFromDb = await this._db.Comments
+                .Include(p => p.User)
+                .Where(x => x.PostId == postId)
+                .ToListAsync();
+
+            // Dodajte komentare iz baze u Redis
+            foreach (var com in comsFromDb)
+            {
+                await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
+            }
+
+            return comsFromDb;
         }
     }
     }

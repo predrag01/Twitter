@@ -54,6 +54,13 @@ namespace BLL.Services
         public async Task<List<Comment>> GetCommentByPostId(int postId)
         {
             List<Comment> allcomsFound = await this._unitOfWork.Comment.GetAllCommentsByPostId(postId);
+            if (allcomsFound[0].User == null)
+            {
+                foreach (var el in allcomsFound)
+                {
+                    el.User = await this._unitOfWork.User.GetUserById(el.UserId);
+                }
+            }
             return allcomsFound;
         }
     }
