@@ -54,7 +54,7 @@ namespace DAL.Repository
         public async Task<Like> Like(Like like)
         {
             this._db.Likes.Add(like);
-            like.ID = this._db.SaveChanges();
+            this._db.SaveChanges();
 
             var newLike = await this._db.Likes.Where(x => x.PostId == like.PostId && x.UserId == like.UserId).FirstOrDefaultAsync();
 

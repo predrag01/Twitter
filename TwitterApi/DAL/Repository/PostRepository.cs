@@ -2,6 +2,8 @@
 using DAL.Models;
 using DAL.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
@@ -48,18 +50,35 @@ namespace DAL.Repository
         public async Task<Post> CreatePost(Post post)
         {
             this._db.Posts.Add(post);
-            post.ID = _db.SaveChanges();
+            _db.SaveChanges();
+
+            var redis = _redis.GetDatabase();
+
+            var key = $"post:{post.ID}:postId";
+            var serializedPost = JsonConvert.SerializeObject(post);
+            await redis.StringSetAsync(key, serializedPost);
+
+            var listKey = $"posts:{post.AuthorId}:authorId";
+            await redis.ListRightPushAsync(listKey, JsonConvert.SerializeObject(post));
+
             return post;
         }
         public async Task<Post> UpdatePost(Post post)
         {
             this._db.Posts.Update(post);
 
-            var key = $"post:{post.ID}:postId";
             var redis = _redis.GetDatabase();
-            await redis.KeyDeleteAsync(key);
+
+            var listKey = $"posts:{post.AuthorId}:authorId";
+            var postDelete = await GetPostById(post.ID);
+            await redis.ListRemoveAsync(listKey, JsonConvert.SerializeObject(postDelete));
+
+            var key = $"post:{post.ID}:postId";
+            await redis.KeyDeleteAsync(key);       
 
             await redis.StringSetAsync(key, JsonConvert.SerializeObject(post));
+            await redis.ListRightPushAsync(listKey, JsonConvert.SerializeObject(post));
+
             return post;
         }
 
@@ -68,6 +87,9 @@ namespace DAL.Repository
             this._db.Posts.Remove(post);
 
             var redis = _redis.GetDatabase();
+
+            var listKey = $"posts:{post.AuthorId}:authorId";
+            await redis.ListRemoveAsync(listKey, JsonConvert.SerializeObject(post));
 
             var key = $"post:{post.ID}:postId";
             await redis.KeyDeleteAsync(key);
@@ -84,7 +106,23 @@ namespace DAL.Repository
         }
         public async Task<List<Post>> GetPostByAuthorId(int authorId)
         {
+            var redis = _redis.GetDatabase();
+
+            var listKey = $"posts:{authorId}:authorId";
+            var redisValue = await redis.ListRangeAsync(listKey);
+            if (redisValue.Any())
+            {
+                var redisPosts = redisValue.Select(item => JsonConvert.DeserializeObject<Post>(item)).ToList();
+                return redisPosts;
+            }
+
             List<Post> posts = await this._db.Posts.Where(x => x.AuthorId == authorId).ToListAsync();
+            if (posts != null)
+            {
+                var serializedLikes = posts.Select(item => JsonConvert.SerializeObject(item)).ToArray();
+                await redis.ListRightPushAsync(listKey, serializedLikes.Select(x => (RedisValue)x).ToArray());
+            }
+
             return posts;
         }
     }

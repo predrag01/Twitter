@@ -83,7 +83,13 @@ namespace DAL.Repository
         public async Task<User> Create(User user)
         {
             _db.Users.Add(user);
-            user.ID = await _db.SaveChangesAsync();
+            this._db.SaveChanges();
+
+            var redis = _redis.GetDatabase();
+
+            var key = $"user:{user.ID}:userId";
+            var serializedUser = JsonConvert.SerializeObject(user);
+            await redis.StringSetAsync(key, serializedUser);
 
             return user;
         }
