@@ -49,37 +49,45 @@ namespace DAL.Repository
             await this._db.SaveChangesAsync();
 
             var redis = _redis.GetDatabase();
+
             var key = $"post:{com.PostId}:comments";
             await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
+
+            var newKey = $"comment:{com.ID}:commentId";
+            await redis.StringSetAsync(newKey, JsonConvert.SerializeObject(com));
 
             return com;
         }
         public async Task<Comment> UpdateComment(Comment com)
         {
+            this._db.Comments.Update(com);
 
-            var key = $"post:{com.PostId}:comments";
             var redis = _redis.GetDatabase();
 
+            var key = $"post:{com.PostId}:comments";
             var comfordel = await GetCommentById(com.ID);
             await redis.ListRemoveAsync(key, JsonConvert.SerializeObject(comfordel));
-
-            this._db.Comments.Update(com);
-            await this._db.SaveChangesAsync();
-
             await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));
+
+            var commKey = $"comment:{com.ID}:commentId";
+            await redis.KeyDeleteAsync(commKey);            
+            await redis.StringSetAsync(commKey, JsonConvert.SerializeObject(com));
 
             return com;
         }
 
         public async Task<Comment> DeleteComment(Comment com)
         {
-            var key = $"post:{com.PostId}:comments";
-            var redis = _redis.GetDatabase();
+            this._db.Comments.Remove(com);
 
+            var redis = _redis.GetDatabase();
+            var key = $"post:{com.PostId}:comments";
             await redis.ListRemoveAsync(key, JsonConvert.SerializeObject(com));
 
-            this._db.Comments.Remove(com);
-            await this._db.SaveChangesAsync();
+            var commKey = $"comment:{com.ID}:commentId";
+            await redis.KeyDeleteAsync(commKey);
+
+            
             return com;
         }
         public async Task<List<Comment>> GetAllCommentsByPostId(int postId)
@@ -87,23 +95,14 @@ namespace DAL.Repository
             var redis = _redis.GetDatabase();
             var key = $"post:{postId}:comments";
 
-            // Pokušajte dobiti komentare iz Redis-a
             var redisValues = await redis.ListRangeAsync(key);
             if (redisValues.Any())
             {
-                // Ako postoje komentari u Redis-u, vrati ih
-                var comsFromRedis = redisValues
-                    .Select(redisValue => JsonConvert.DeserializeObject<Comment>(redisValue))
-                    .ToList();
+                var comsFromRedis = redisValues.Select(redisValue => JsonConvert.DeserializeObject<Comment>(redisValue)).ToList();
                 return comsFromRedis;
             }
-            // Ako nema komentara u Redis-u, dohvati ih iz baze
-            List<Comment> comsFromDb = await this._db.Comments
-                .Include(p => p.User)
-                .Where(x => x.PostId == postId)
-                .ToListAsync();
-
-            // Dodajte komentare iz baze u Redis
+            
+            List<Comment> comsFromDb = await this._db.Comments.Include(p => p.User).Where(x => x.PostId == postId).ToListAsync();
             foreach (var com in comsFromDb)
             {
                 await redis.ListRightPushAsync(key, JsonConvert.SerializeObject(com));

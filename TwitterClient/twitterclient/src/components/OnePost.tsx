@@ -5,6 +5,7 @@ import LikeComponent from "./Like";
 import { Comment } from "../models/comment.model";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencilAlt, faTrash } from "@fortawesome/free-solid-svg-icons";
+import image from "./../assets/noProfilePicture.png"
 
 
 const OnePost = (props: { post: Post, userId: number}) => {
@@ -207,7 +208,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
     <div className="post-container">
       <div className="top-row">
         <div className="icon">
-          <img src={props.post.author?.profilePicture} alt="Profilna slika" />
+          <img src={props.post.author?.profilePicture ? props.post.author?.profilePicture : image } alt="Profilna slika" />
         </div>
         <p className="username">{props.post.author?.username}</p>
       </div>
@@ -245,7 +246,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
             comments.map((comment) => (
               <div key={comment.id} className="comment">
                 <div className="icon">
-                  <img src={comment.user?.profilePicture} alt="Profilna slika" />
+                  <img src={comment.user?.profilePicture ? comment.user?.profilePicture : image} alt="Profilna slika" />
                 </div>
                 <p className="comment-author">{comment.user?.username}</p>
                 <p className="comment-content">{comment.commentContent}</p>
@@ -279,9 +280,6 @@ const OnePost = (props: { post: Post, userId: number}) => {
       )}
     </div>
   );
-
-  
-  
 };
 
 export default OnePost;
