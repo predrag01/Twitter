@@ -60,14 +60,19 @@ namespace BLL.Services
         public async Task<List<Post>> GetPostByAuthorId(int authorId)
         {
             List<Post> allpostsFound = await this._unitOfWork.Post.GetPostByAuthorId(authorId);
-            if (allpostsFound[0].Author == null)
+            if(allpostsFound !=null )
             {
-                foreach(var post in allpostsFound)
+                if (allpostsFound[0].Author == null)
                 {
-                    post.Author = await this._unitOfWork.User.GetUserById(post.AuthorId);
+                    foreach (var post in allpostsFound)
+                    {
+                        post.Author = await this._unitOfWork.User.GetUserById(post.AuthorId);
+                    }
                 }
+                return allpostsFound;
             }
-            return allpostsFound;
+
+            return null;            
         }
     }
 }

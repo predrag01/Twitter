@@ -144,9 +144,9 @@ const OnePost = (props: { post: Post, userId: number}) => {
     }
   };
 
-  useEffect(() => {
-    fetchComments();
-  }, []);
+  // useEffect(() => {
+  //   fetchComments();
+  // }, []);
 
 
 

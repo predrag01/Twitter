@@ -97,10 +97,10 @@ namespace TwitterApi.Controllers
             {
                 List<Post> posts = await this._postService.GetPostByAuthorId(authorId);
 
-                //if (posts == null || posts.Count == 0)
-                //{
-                //    return NotFound();
-                //}
+                if (posts == null || posts.Count == 0)
+                {
+                    return NotFound();
+                }
 
                 return Ok(posts);
             }

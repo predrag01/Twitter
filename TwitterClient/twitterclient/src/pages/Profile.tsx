@@ -31,8 +31,6 @@ const Profile = ( props : {loggedUserId: number}) => {
           setFollowBtn(true)
         }
 
-        console.log(props.loggedUserId)
-
         const response = await fetch(`https://localhost:7082/User/Profile/${encodeURIComponent(profileUserId)}/${encodeURIComponent(props.loggedUserId)}`, {
             method: 'GET',
             headers: {
@@ -49,14 +47,13 @@ const Profile = ( props : {loggedUserId: number}) => {
           if(user)
             setUserData(user);
 
-          console.log(user.checkFollowing);
           if(user.followersCount !== undefined && user.followingCount !==undefined)
           {
             setFollowersCount(user.followersCount);
             setFollowingCount(user.followingCount);
           }
 
-        const postsResponde = await fetch(`https://localhost:7082/Post/GetPostByAuthorId/${encodeURIComponent(profileUserId)}`, {
+        const postsResponse = await fetch(`https://localhost:7082/Post/GetPostByAuthorId/${encodeURIComponent(profileUserId)}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -64,17 +61,23 @@ const Profile = ( props : {loggedUserId: number}) => {
             },
         });
 
-        if (!postsResponde.ok) {
-          throw new Error('Failed to fetch user data');
+        if (!postsResponse.ok) {
+          if (postsResponse.status === 404) {
+            setNoPost(true);
+            setPosts([]); // Clear posts array
+          } else {
+            throw new Error('Failed to fetch user data');
+          }
+        } else {
+          const postData = await postsResponse.json();
+    
+          postData.forEach((post: Post) => {
+            const aa = post.posted.split('T');
+            post.datum = new Date(aa[0]);
+          });
+          setPosts(postData);
+          setNoPost(postData.length === 0);
         }
-        const postData = await postsResponde.json();
-
-        postData.forEach((post: Post) => {
-          const aa = post.posted.split("T");
-          post.datum = new Date(aa[0]);
-        });
-        setPosts(postData);
-        setNoPost(postData.length === 0);
       };
       fetchUserData();
     }, [props.loggedUserId]);

@@ -117,10 +117,14 @@ namespace DAL.Repository
             }
 
             List<Post> posts = await this._db.Posts.Where(x => x.AuthorId == authorId).ToListAsync();
-            if (posts != null)
+            if (posts.Count > 0)
             {
                 var serializedLikes = posts.Select(item => JsonConvert.SerializeObject(item)).ToArray();
                 await redis.ListRightPushAsync(listKey, serializedLikes.Select(x => (RedisValue)x).ToArray());
+            }
+            else
+            {
+                posts = null;
             }
 
             return posts;
