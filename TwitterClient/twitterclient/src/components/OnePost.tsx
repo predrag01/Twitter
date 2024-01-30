@@ -192,7 +192,6 @@ const OnePost = (props: { post: Post, userId: number}) => {
   
       if (response.ok) {
         console.log(`Comment with id ${commentId} deleted successfully.`);
-        // Assuming fetchComments is a function that fetches and updates the comments list
         fetchComments();
       } else {
         console.error(`Error deleting comment with id ${commentId}.`);
@@ -233,7 +232,7 @@ const OnePost = (props: { post: Post, userId: number}) => {
       </div>
       <div className="LikeCommentDiv">
         <LikeComponent postId={props.post.id} userId={props.userId} />
-        <p className="comments-toggle" onClick={() => setShowAllComments(!showAllComments)}>
+        <p className="comments-toggle" onClick={() => { fetchComments(); setShowAllComments(!showAllComments); }}>
           Komentari
         </p>
       </div>
@@ -245,10 +244,12 @@ const OnePost = (props: { post: Post, userId: number}) => {
           ) : (
             comments.map((comment) => (
               <div key={comment.id} className="comment">
+                <div className="comment123">
                 <div className="icon">
                   <img src={comment.user?.profilePicture ? comment.user?.profilePicture : image} alt="Profilna slika" />
                 </div>
                 <p className="comment-author">{comment.user?.username}</p>
+                </div>
                 <p className="comment-content">{comment.commentContent}</p>
                 {comment.user?.id === props.userId && (
                   <div className="Izmena">
