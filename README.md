@@ -1,4 +1,4 @@
-Twitter clone - timski projekat za potrebe predmeta Napredne baze podataka
+#Twitter clone - timski projekat za potrebe predmeta Napredne baze podataka
 Na projektu radili:
 Predrag Tosic - 18454
 Mihajlo Petrovic - 18333
