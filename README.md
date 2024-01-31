@@ -15,6 +15,6 @@ Twitter clone - timski projekat za potrebe predmeta Napredne baze podataka
 
 # Pokretanje projekta
 - Visual Studio:
-  # Update-Database
+  - Update-Database
 - Visual Studio Code:
-  # npm o
+  - npm i
